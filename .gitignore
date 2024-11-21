@@ -40,3 +40,5 @@ yarn-error.log*
 
 # Other optional files
 /.eslintcache
+
+/src/constants/Api.js
