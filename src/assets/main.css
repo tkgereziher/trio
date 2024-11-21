@@ -1,0 +1,96 @@
+:root {
+    --color-active-bg: #ccc;
+    --color-active: green;
+    --color-primary: #8a278d;
+    --color-primary1: #75429b;
+    --color-primary2: #9e2ff5;
+    --color-secondary: #76439c;
+    --color-background: #CBBDD6;
+    --color-background2: #d0c3da;
+    --color-dark-text: #632097;
+    --color-dark: #040101;
+    
+}
+
+body, .v-card {
+    background: #ebe1f3;
+}
+.text-cloud {
+    color: #888;
+}
+
+nav>div>div>div>.v-list-item .v-list-item__spacer {
+    width: 0% !important;
+    margin-right: 1rem;
+}
+
+nav>div>div>div>.v-list-item--active .v-list-item__content .v-list-item-title {
+    font-weight: bolder !important;
+}
+
+nav>div>div>div>.v-list-item--active {
+    border-right: 4px solid green !important;
+    color: var(--color-active) !important;
+    background-color: #14a8141d;
+    /* border-radius: 15px; */
+}
+
+nav>div>div>div>.v-list-item:hover {
+    border-radius: 0px !important;
+    background: #ccc;
+}
+
+.v-list-item--variant-text .v-list-item__overlay {
+    background: #fff !important;
+}
+
+.v-toolbar__content>.v-list-item--active {
+    background: #fefefe !important;
+    margin-bottom: -2px !important;
+    border-bottom: 2px solid green !important;
+}
+
+.v-data-table__th {
+    font-weight: bold !important;
+    font-size: larger;
+}
+
+.v-messages__message {
+    margin: -9px !important;
+    font-size: 9px !important;
+}
+
+.SelectedTile:hover {
+    border-radius: 4px;
+    background: #ccc;
+}
+
+.SelectedTile-active {
+    border-radius: 4px;
+    background: rgba(49, 112, 84, 0.19);
+}
+
+/* Disable the scrollbar of navigation drawer */
+.v-navigation-drawer__content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #5d5d5d;
+    /* background-color: #5d5d5d; */
+    background-color: #f8f2f2;
+}
+
+.v-navigation-drawer__content::-webkit-scrollbar {
+    width: 5px;
+}
+
+.v-navigation-drawer__content::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px #424242;
+    /* background-color: #424242; */
+    background-color: #aea8a8;
+}
+
+.brand2 {
+    color: red;
+}
+
+body {
+    background-image: url(/bg.png) !important;
+}
