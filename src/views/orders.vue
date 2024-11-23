@@ -2,7 +2,7 @@
   <v-card min-height="80vh">
     <v-card-title>
       Active Orders
-      <create-new></create-new>
+      <create-new @click="$router.push({ name: 'order' })"></create-new>
     </v-card-title>
     <v-divider></v-divider>
     <v-img
@@ -27,13 +27,22 @@
                   <v-icon v-bind="props"> mdi-dots-vertical </v-icon>
                 </template>
                 <v-list>
-                  <v-list-item prepend-icon="mdi-pencil">Add Item</v-list-item>
-                  <v-list-item prepend-icon="mdi-close-circle"
+                  <v-list-item
+                    prepend-icon="mdi-pencil"
+                    @click="
+                      $router.push({
+                        name: 'orderEdit',
+                        params: { id: order.id },
+                      })
+                    "
+                    >Edit Order</v-list-item
+                  >
+                  <!-- <v-list-item prepend-icon="mdi-close-circle"
                     >Cancel</v-list-item
                   >
                   <v-list-item prepend-icon="mdi-check-circle"
                     >Done</v-list-item
-                  >
+                  > -->
                 </v-list>
               </v-menu>
             </template>
@@ -53,14 +62,14 @@
               </template>
               <template v-slot:append>
                 <b>{{ item.quantity }}</b>
-                <v-icon
+                <!-- <v-icon
                   size="small"
                   color="info"
                   title="Edit Item"
                   @click="editItem(item)"
                   v-if="order.state == 'new'"
                   >mdi-pencil</v-icon
-                >
+                > -->
               </template>
               <v-list-item-title class="text-capitalize">{{
                 item.product?.name
@@ -69,15 +78,17 @@
                 <v-text :class="'text-' + getItemColor(item.state)">
                   {{ getItemStatus(item.state) }}
                 </v-text>
+                | {{ item.product.price }}
               </v-list-item-subtitle>
               <v-divider></v-divider>
             </v-list-item>
 
             <!-- Add the card actions at the bottom of each card -->
             <v-card-actions class="mt-auto mx-2">
-              <v-chip :color="getOrderColor(order.state)">{{
-                getOrderStatus(order.state)
-              }}</v-chip>
+              <v-chip :color="getOrderColor(order.state)"
+                >{{ getOrderStatus(order.state) }}:
+                {{ order.total_price }}</v-chip
+              >
               <v-spacer></v-spacer>
               <span class="text-grey">
                 <b class="text-capitalize">{{ order.waiter?.name }}</b> /

@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.ORDER_BURL;
+const API_URL = Api.BARBERRY_SERVICE_BURL;
 import useSnackStore from "@/stores/snack";
 const snack = useSnackStore();
-const useOrderStore = defineStore("order", {
+const useBarberryServiceStore = defineStore("barberryService", {
   state: () => ({
-    orders: [],
-    order: null,
+    barberryServices: [],
+    barberryService: null,
   }),
 
   actions: {
-    async fetchOrders() {
+    async fetchBarberryServices(initiator = null) {
       await axios
-        .get(API_URL)
+        .get(API_URL + `?initiator=${initiator}`)
         .then((response) => {
-          this.orders = response.data;
+          this.barberryServices = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -23,11 +23,11 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async fetchOrder(id) {
+    async fetchBarberryService(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.order = response.data;
+          this.barberryService = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -35,11 +35,11 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async addOrder(data) {
+    async addBarberryService(data) {
       await axios
         .post(API_URL, data)
         .then((response) => {
-          this.orders.unshift(response.data);
+          this.barberryServices.unshift(response.data);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -49,15 +49,15 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async updateOrder(data) {
+    async updateBarberryService(data) {
       await axios
         .put(API_URL + `/${data.id}`, data)
         .then((response) => {
-          const object = this.orders.find(
+          const object = this.barberryServices.find(
             (item) => item.id === response.data.id
           );
           if (object) Object.assign(object, response.data);
-          else this.order = response.data;
+          else this.barberryService = response.data;
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -67,29 +67,13 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async updateOrderState(id, state) {
-      await axios
-        .put(API_URL + `/${id}/state/${state}`)
-        .then((response) => {
-          // this.orders = this.orders.filter((item) => item.id !== id);
-          const object = this.orders.find(
-            (item) => item.id === response.data.id
-          );
-          if (object) Object.assign(object, response.data);
-          snack.showMessage(response);
-          return Promise.resolve();
-        })
-        .catch((error) => {
-          snack.showMessage(error.response);
-          return Promise.reject(error);
-        });
-    },
-
-    async trashOrder(id) {
+    async trashBarberryService(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.orders = this.orders.filter((item) => item.id !== id);
+          this.barberryServices = this.barberryServices.filter(
+            (item) => item.id !== id
+          );
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -101,4 +85,4 @@ const useOrderStore = defineStore("order", {
   },
 });
 
-export default useOrderStore;
+export default useBarberryServiceStore;

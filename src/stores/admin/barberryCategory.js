@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.ORDER_BURL;
+const API_URL = Api.BARBERRY_CATEGORY_BURL;
 import useSnackStore from "@/stores/snack";
 const snack = useSnackStore();
-const useOrderStore = defineStore("order", {
+const useBarberryCategoryStore = defineStore("barberryCategory", {
   state: () => ({
-    orders: [],
-    order: null,
+    categories: [],
+    category: null,
   }),
 
   actions: {
-    async fetchOrders() {
+    async fetchCategories(initiator = null) {
       await axios
-        .get(API_URL)
+        .get(API_URL + `?initiator=${initiator}`)
         .then((response) => {
-          this.orders = response.data;
+          this.categories = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -23,11 +23,11 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async fetchOrder(id) {
+    async fetchCategory(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.order = response.data;
+          this.category = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -35,11 +35,11 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async addOrder(data) {
+    async addCategory(data) {
       await axios
         .post(API_URL, data)
         .then((response) => {
-          this.orders.unshift(response.data);
+          this.categories.unshift(response.data);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -49,15 +49,15 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async updateOrder(data) {
+    async updateCategory(data) {
       await axios
         .put(API_URL + `/${data.id}`, data)
         .then((response) => {
-          const object = this.orders.find(
+          const object = this.categories.find(
             (item) => item.id === response.data.id
           );
           if (object) Object.assign(object, response.data);
-          else this.order = response.data;
+          else this.category = response.data;
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -67,29 +67,11 @@ const useOrderStore = defineStore("order", {
         });
     },
 
-    async updateOrderState(id, state) {
-      await axios
-        .put(API_URL + `/${id}/state/${state}`)
-        .then((response) => {
-          // this.orders = this.orders.filter((item) => item.id !== id);
-          const object = this.orders.find(
-            (item) => item.id === response.data.id
-          );
-          if (object) Object.assign(object, response.data);
-          snack.showMessage(response);
-          return Promise.resolve();
-        })
-        .catch((error) => {
-          snack.showMessage(error.response);
-          return Promise.reject(error);
-        });
-    },
-
-    async trashOrder(id) {
+    async trashCategory(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.orders = this.orders.filter((item) => item.id !== id);
+          this.categories = this.categories.filter((item) => item.id !== id);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -101,4 +83,4 @@ const useOrderStore = defineStore("order", {
   },
 });
 
-export default useOrderStore;
+export default useBarberryCategoryStore;

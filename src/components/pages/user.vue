@@ -64,26 +64,31 @@
 
     <!-- Create and Update Dialog -->
     <v-dialog v-model="dialog" max-width="700" persistent>
-      <v-card>
-        <v-card-title>
-          <Close @click="closeDialog" />
-          <span v-if="isEditing">Edit</span>
-          <span v-else>Add</span>
-          {{ title }}
-          <v-btn
-            @click="isEditing ? updateUser() : addUser()"
-            :color="isEditing ? '#14414b' : '#632097'"
-            width="160"
-            class="float-right text-none"
-            prepend-icon="mdi-check-all"
-            :disabled="!valid || isSubmitting"
-            :loading="isSubmitting"
-            >{{ isEditing ? "Save Changes" : "Save" }}</v-btn
-          >
-        </v-card-title>
-        <v-divider class="mb-3"></v-divider>
-        <v-card-text>
-          <v-form ref="form" v-model="valid">
+      <v-form
+        ref="form"
+        v-model="valid"
+        @submit.prevent="isEditing ? updateUser() : addUser()"
+      >
+        <v-card>
+          <v-card-title>
+            <Close @click="closeDialog" />
+            <span v-if="isEditing">Edit</span>
+            <span v-else>Add</span>
+            {{ title }}
+            <v-btn
+              @click="isEditing ? updateUser() : addUser()"
+              :color="isEditing ? '#14414b' : '#632097'"
+              width="160"
+              class="float-right text-none"
+              prepend-icon="mdi-check-all"
+              :disabled="!valid || isSubmitting"
+              :loading="isSubmitting"
+              type="submit"
+              >{{ isEditing ? "Save Changes" : "Save" }}</v-btn
+            >
+          </v-card-title>
+          <v-divider class="mb-3"></v-divider>
+          <v-card-text>
             <v-row>
               <v-col cols="12" md="6" class="py-0">
                 <v-text-field
@@ -180,9 +185,9 @@
                 </v-text-field>
               </v-col>
             </v-row>
-          </v-form>
-        </v-card-text>
-      </v-card>
+          </v-card-text>
+        </v-card>
+      </v-form>
     </v-dialog>
 
     <!-- Reset Password Dialog -->

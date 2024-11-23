@@ -1,7 +1,7 @@
 <template>
   <v-card min-height="80vh">
     <v-card-title>
-      Food Categories
+      Barberry Categories
       <CreateNew @click="openCreateDialog" />
     </v-card-title>
     <v-divider></v-divider>
@@ -16,26 +16,26 @@
         <template #item.index="{ index }">
           {{ index + 1 }}
         </template>
-        <template #item.origin="{ item }">
-          <span class="text-capitalize">{{ item.origin }}</span>
+        <template #item.price="{ item }">
+          <span class="text-capitalize">{{ item.price }}</span>
         </template>
         <template #item.actions="{ item }">
           <v-icon color="info" @click="openUpdateDialog(item)" class="mr-2"
             >mdi-pencil</v-icon
           >
-          <v-icon color="red" @click="deleteCategory(item.id)"
+          <!-- <v-icon color="red" @click="deleteCategory(item.id)"
             >mdi-delete</v-icon
-          >
+          > -->
         </template>
       </v-data-table>
     </v-card-text>
+    <!-- Create and Update Dialog -->
     <v-dialog v-model="dialog" width="600px">
       <v-form
         ref="form"
         v-model="valid"
         @submit.prevent="isEditing ? updateCategory() : addCategory()"
-      >
-        <v-card>
+        ><v-card>
           <v-card-title>
             <Close @click="closeDialog" />
             <span v-if="isEditing">Edit</span>
@@ -62,27 +62,16 @@
               color="#632097"
               label="Name"
               :rules="[rules.required]"
-              required
             ></v-text-field>
-            <v-select
-              v-model="category.origin"
-              :items="origins"
+            <v-text-field
+              v-model="category.price"
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Select Origin"
+              label="Price"
+              type="number"
               :rules="[rules.required]"
-              item-value="value"
-              item-title="text"
-            ></v-select>
-            <v-textarea
-              v-model="category.description"
-              variant="outlined"
-              density="compact"
-              color="#632097"
-              label="Description"
-              rows="2"
-            ></v-textarea>
+            ></v-text-field>
           </v-card-text>
         </v-card>
       </v-form>
@@ -92,15 +81,15 @@
 
 <script>
 import { ref, computed, onMounted } from "vue";
-import useCategoryStore from "@/stores/admin/category";
+import useBarberryCategoryStore from "@/stores/admin/barberryCategory";
 
 export default {
   setup() {
-    const categoryStore = useCategoryStore();
+    const categoryStore = useBarberryCategoryStore();
     const categories = computed(() => categoryStore.categories);
     const dialog = ref(false);
     const loading = ref(false);
-    const category = ref({ name: null, origin: null, description: null });
+    const category = ref({ name: null, price: null });
     const valid = ref(false);
     const isEditing = ref(false);
     const isSubmitting = ref(false);
@@ -109,11 +98,6 @@ export default {
       minLength: (value) =>
         (value && value.length >= 3) || "Minimum 3 characters.",
     };
-
-    const origins = [
-      { text: "Kitchen", value: "kitchen" },
-      { text: "Bartender", value: "bartender" },
-    ];
 
     onMounted(async () => {
       loading.value = true;
@@ -125,7 +109,7 @@ export default {
     });
 
     const openCreateDialog = () => {
-      category.value = { name: null, origin: null, description: null };
+      category.value = { name: null, price: null };
       isEditing.value = false;
       dialog.value = true;
     };
@@ -181,7 +165,7 @@ export default {
     const headers = [
       { title: "#", key: "index" },
       { title: "Name", key: "name" },
-      { title: "From", key: "origin" },
+      { title: "Price", key: "price" },
       { title: "Actions", key: "actions", sortable: false },
     ];
 
@@ -194,7 +178,6 @@ export default {
       isEditing,
       isSubmitting,
       rules,
-      origins,
       openCreateDialog,
       openUpdateDialog,
       closeDialog,

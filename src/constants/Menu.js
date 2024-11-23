@@ -14,13 +14,27 @@ const ADMIN_MENU = [
   {
     title: "Products",
     path: "products",
-    icon: "mdi-format-indent-increase",
+    icon: "mdi-food-variant",
   },
   {
     title: "Categories",
     path: "categories",
-    icon: "mdi-account-multiple-plus",
+    icon: "mdi-group",
   },
+  {
+    type: "divider",
+  },
+  {
+    title: "Barberry Categories",
+    path: "barberryCategories",
+    icon: "mdi-crosshairs-gps",
+  },
+  {
+    title: "Barberry Services",
+    path: "barberry",
+    icon: "mdi-content-cut",
+  },
+
   {
     type: "divider",
   },
@@ -33,7 +47,7 @@ const ADMIN_MENU = [
   {
     title: "Waiters",
     path: "waiters",
-    icon: "mdi-account-multiple",
+    icon: "mdi-city",
   },
 ];
 const WAITER_MENU = [
@@ -58,7 +72,7 @@ const CASHIER_MENU = [
   {
     title: "Coin Requests",
     path: "coinRequests",
-    icon: "mdi-coin",
+    icon: "mdi-gamepad-variant",
   },
 ];
 
@@ -86,7 +100,13 @@ const ENTETAINMENT_MENU = [
   },
 ];
 
-const BARBER_MENU = [];
+const BARBER_MENU = [
+  {
+    title: "Barberry Services",
+    path: "barberryServices",
+    icon: "mdi-content-cut",
+  },
+];
 
 export {
   ADMIN_MENU,

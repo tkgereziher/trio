@@ -54,26 +54,31 @@
 
     <!-- Create and Update Dialog -->
     <v-dialog v-model="dialog" max-width="700" persistent>
-      <v-card>
-        <v-card-title>
-          <Close @click="closeDialog" />
-          <span v-if="isEditing">Edit</span>
-          <span v-else>Add</span>
-          {{ title }}
-          <v-btn
-            @click="isEditing ? updateWaiter() : addWaiter()"
-            :color="isEditing ? '#14414b' : '#632097'"
-            width="160"
-            class="float-right text-none"
-            prepend-icon="mdi-check-all"
-            :disabled="!valid || isSubmitting"
-            :loading="isSubmitting"
-            >{{ isEditing ? "Save Changes" : "Save" }}</v-btn
-          >
-        </v-card-title>
-        <v-divider class="mb-3"></v-divider>
-        <v-card-text>
-          <v-form ref="form" v-model="valid">
+      <v-form
+        ref="form"
+        v-model="valid"
+        @submit.prevent="isEditing ? updateWaiter() : addWaiter()"
+      >
+        <v-card>
+          <v-card-title>
+            <Close @click="closeDialog" />
+            <span v-if="isEditing">Edit</span>
+            <span v-else>Add</span>
+            {{ title }}
+            <v-btn
+              @click="isEditing ? updateWaiter() : addWaiter()"
+              :color="isEditing ? '#14414b' : '#632097'"
+              width="160"
+              class="float-right text-none"
+              prepend-icon="mdi-check-all"
+              :disabled="!valid || isSubmitting"
+              :loading="isSubmitting"
+              type="submit"
+              >{{ isEditing ? "Save Changes" : "Save" }}</v-btn
+            >
+          </v-card-title>
+          <v-divider class="mb-3"></v-divider>
+          <v-card-text>
             <v-row>
               <v-col cols="12" md="6" class="py-0">
                 <v-text-field
@@ -136,37 +141,42 @@
                 ></v-text-field>
               </v-col>
             </v-row>
-          </v-form>
-        </v-card-text>
-      </v-card>
+          </v-card-text>
+        </v-card>
+      </v-form>
     </v-dialog>
 
     <!-- Reset Code Dialog -->
     <v-dialog v-model="resetCodeDialog" max-width="400px">
-      <v-card>
-        <v-card-title> Reset Code </v-card-title>
-        <v-card-text>
-          <v-form ref="codeForm" v-model="codeValid">
+      <v-form
+        ref="codeForm"
+        v-model="codeValid"
+        @submit.prevent="resetCodeAction"
+      >
+        <v-card>
+          <v-card-title> Reset Code </v-card-title>
+          <v-card-text>
             <v-text-field
               v-model="newCode"
               label="New Code"
               required
               :rules="[rules.required]"
-              type="number"
+              type="password"
             >
             </v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="closeResetCodeDialog">Cancel</v-btn>
-          <v-btn
-            color="primary"
-            @click="resetCodeAction"
-            :disabled="!codeValid || isSubmitting"
-            >Reset</v-btn
-          >
-        </v-card-actions>
-      </v-card>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn text @click="closeResetCodeDialog">Cancel</v-btn>
+            <v-btn
+              color="primary"
+              @click="resetCodeAction"
+              :disabled="!codeValid || isSubmitting"
+              type="submit"
+              >Reset</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-form>
     </v-dialog>
 
     <!-- Confirmation Dialog -->

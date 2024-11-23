@@ -42,6 +42,36 @@ export default [
     meta: { title: "Categories", scope: "Authorized", allowedRoles: ["admin"] },
   },
   {
+    path: "/barberry-categories",
+    name: "barberryCategories",
+    component: () => import("@/views/admin/barberryCategory.vue"),
+    meta: {
+      title: "Barberry Categories",
+      scope: "Authorized",
+      allowedRoles: ["admin"],
+    },
+  },
+  {
+    path: "/barberry-services",
+    name: "barberryServices",
+    component: () => import("@/views/barberryServices.vue"),
+    meta: {
+      title: "Barberry Services",
+      scope: "Authorized",
+      allowedRoles: ["barber"],
+    },
+  },
+  {
+    path: "/barberry",
+    name: "barberry",
+    component: () => import("@/views/barberry.vue"),
+    meta: {
+      title: "Barberry Services",
+      scope: "Authorized",
+      allowedRoles: ["admin"],
+    },
+  },
+  {
     path: "/products",
     name: "products",
     component: () => import("@/views/admin/product.vue"),
@@ -50,7 +80,7 @@ export default [
 
   //Cashier
   {
-    path: "/casier-orders",
+    path: "/cashier-orders",
     name: "corders",
     component: () => import("@/views/corders.vue"),
     meta: { title: "Orders", scope: "Authorized", allowedRoles: ["cashier"] },
@@ -77,7 +107,17 @@ export default [
     path: "/orders/new",
     name: "order",
     component: () => import("@/views/order.vue"),
-    meta: { title: "Orders", scope: "Authorized", allowedRoles: ["waiter"] },
+    meta: { title: "New Order", scope: "Authorized", allowedRoles: ["waiter"] },
+  },
+  {
+    path: "/orders/:id/edit",
+    name: "orderEdit",
+    component: () => import("@/views/order.vue"),
+    meta: {
+      title: "Edit Order",
+      scope: "Authorized",
+      allowedRoles: ["waiter"],
+    },
   },
 
   //Kitchen

@@ -284,6 +284,10 @@ export default {
           return this.BARTENDER_MENU;
         case "entertainment":
           return this.ENTETAINMENT_MENU;
+        case "barber":
+          return this.BARBER_MENU;
+        default:
+          return [];
       }
     },
   },

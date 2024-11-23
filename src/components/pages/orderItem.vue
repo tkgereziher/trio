@@ -6,9 +6,11 @@
       <v-data-table
         :headers="headers"
         :items="orderItems"
-        class="elevation-1"
+        class="elevation-1 mb-5"
         item-key="id"
         :loading="loading"
+        hide-default-footer
+        :items-per-page="orderItems.length"
       >
         <template #item.waiter="{ item }">
           <span class="text-capitalize">{{ item.order?.waiter?.name }}</span>
@@ -185,12 +187,12 @@ export default {
     };
 
     const headers = [
-      { title: "#", key: "index" },
+      { title: "#", key: "index", sortable: false },
       { title: "Waiter", key: "waiter" },
-      { title: "Item", key: "product.name" },
-      { title: "Quantity", key: "quantity" },
-      { title: "Ordered at", key: "created_at" },
-      { title: "Status", key: "status" },
+      { title: "Item", key: "product.name", sortable: false },
+      { title: "Quantity", key: "quantity", sortable: false },
+      { title: "Ordered at", key: "created_at", sortable: false },
+      { title: "Status", key: "status", sortable: false },
       { title: "Actions", key: "actions", sortable: false },
     ];
 

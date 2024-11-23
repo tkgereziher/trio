@@ -26,6 +26,7 @@ const roleRedirects = {
   [ROLE_VALUES.CASHIER]: "/cashier-orders",
   [ROLE_VALUES.WAITER]: "/orders",
   [ROLE_VALUES.ADMIN]: "/products",
+  [ROLE_VALUES.BARBER]: "/barberry-services",
   [ROLE_VALUES.SUPERADMIN]: "/admins",
 };
 

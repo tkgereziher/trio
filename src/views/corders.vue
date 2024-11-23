@@ -10,9 +10,6 @@
         item-key="id"
         :loading="loading"
       >
-        <template #item.waiter="{ item }">
-          <span class="text-capitalize">{{ item.user?.name }}</span>
-        </template>
         <template #item.index="{ index }">
           {{ index + 1 }}
         </template>
@@ -136,7 +133,7 @@ export default {
 
     const headers = [
       { title: "#", key: "index" },
-      { title: "Waiter", key: "waiter" },
+      { title: "Waiter", key: "waiter.name" },
       { title: "Items", key: "items" },
       { title: "Payment", key: "total_price" },
       { title: "Ordered at", key: "created_at" },
