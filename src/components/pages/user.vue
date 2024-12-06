@@ -12,6 +12,8 @@
         class="elevation-1"
         item-key="id"
         :loading="loading"
+        hide-default-footer
+        :items-per-page="users.length"
       >
         <template #item.index="{ index }">
           {{ index + 1 }}
@@ -291,7 +293,9 @@ export default {
             { title: "Kitchen", value: "kitchen" },
             { title: "Bartender", value: "bartender" },
             { title: "Barber", value: "barber" },
+            { title: "Barber Cashier", value: "barber_cashier" },
             { title: "Entertainment", value: "entertainment" },
+            { title: "Store", value: "store" },
           ];
     const rules = {
       required: (value) => !!value || "Required.",
@@ -428,6 +432,8 @@ export default {
         superadmin: "Super admin",
         entertainment: "Entertainment",
         barber: "Barber",
+        barber_cashier: "Barber Cashier",
+        store: "Store",
       };
       return ROLE_VALUES[value.toLowerCase()] || "Unknown";
     };

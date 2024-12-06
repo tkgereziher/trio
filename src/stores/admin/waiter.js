@@ -11,9 +11,9 @@ const useWaiterStore = defineStore("waiter", {
   }),
 
   actions: {
-    async fetchWaiters() {
+    async fetchWaiters(initiator = null) {
       await axios
-        .get(API_URL)
+        .get(API_URL + `?initiator=${initiator}`)
         .then((response) => {
           this.waiters = response.data;
           return Promise.resolve();

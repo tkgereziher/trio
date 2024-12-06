@@ -1,50 +1,51 @@
 <template>
   <v-card min-height="80vh">
     <v-card-title>
-      Food Categories
+      Barbers
       <CreateNew @click="openCreateDialog" />
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="categories"
+        :items="barbers"
         class="elevation-1"
         item-key="id"
         :loading="loading"
-        hide-default-footer
-        :items-per-page="categories.length"
       >
         <template #item.index="{ index }">
           {{ index + 1 }}
         </template>
-        <template #item.origin="{ item }">
-          <span class="text-capitalize">{{ item.origin }}</span>
+        <template #item.name="{ item }">
+          <span class="text-capitalize"
+            >{{ item.first_name }} {{ item.middle_name }}
+            {{ item.last_name }}</span
+          >
         </template>
         <template #item.actions="{ item }">
           <v-icon color="info" @click="openUpdateDialog(item)" class="mr-2"
             >mdi-pencil</v-icon
           >
-          <v-icon color="red" @click="deleteCategory(item.id)"
+          <!-- <v-icon color="red" @click="deleteBarber(item.id)"
             >mdi-delete</v-icon
-          >
+          > -->
         </template>
       </v-data-table>
     </v-card-text>
-    <v-dialog v-model="dialog" width="600px">
+    <!-- Create and Update Dialog -->
+    <v-dialog v-model="dialog" width="500">
       <v-form
         ref="form"
         v-model="valid"
-        @submit.prevent="isEditing ? updateCategory() : addCategory()"
-      >
-        <v-card>
+        @submit.prevent="isEditing ? updateBarber() : addBarber()"
+        ><v-card>
           <v-card-title>
             <Close @click="closeDialog" />
             <span v-if="isEditing">Edit</span>
             <span v-else>Add</span>
-            Category
+            Barber
             <v-btn
-              @click="isEditing ? updateCategory() : addCategory()"
+              @click="isEditing ? updateBarber() : addBarber()"
               :color="isEditing ? '#14414b' : '#632097'"
               width="160"
               class="float-right text-none"
@@ -58,33 +59,44 @@
           <v-divider class="mb-3"></v-divider>
           <v-card-text>
             <v-text-field
-              v-model="category.name"
+              v-model="barber.first_name"
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Name"
+              label="First name"
               :rules="[rules.required]"
-              required
+            ></v-text-field>
+            <v-text-field
+              v-model="barber.middle_name"
+              variant="outlined"
+              density="compact"
+              color="#632097"
+              label="Middle name"
+              :rules="[rules.required]"
+            ></v-text-field>
+            <v-text-field
+              v-model="barber.last_name"
+              variant="outlined"
+              density="compact"
+              color="#632097"
+              label="Last name"
             ></v-text-field>
             <v-select
-              v-model="category.origin"
-              :items="origins"
+              v-model="barber.sex"
+              :items="['Male', 'Female']"
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Select Origin"
+              label="Last name"
               :rules="[rules.required]"
-              item-value="value"
-              item-title="text"
             ></v-select>
-            <v-textarea
-              v-model="category.description"
+            <v-text-field
+              v-model="barber.phone"
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Description"
-              rows="2"
-            ></v-textarea>
+              label="Phone"
+            ></v-text-field>
           </v-card-text>
         </v-card>
       </v-form>
@@ -94,15 +106,21 @@
 
 <script>
 import { ref, computed, onMounted } from "vue";
-import useCategoryStore from "@/stores/admin/category";
+import useBarberStore from "@/stores/admin/barber";
 
 export default {
   setup() {
-    const categoryStore = useCategoryStore();
-    const categories = computed(() => categoryStore.categories);
+    const barberStore = useBarberStore();
+    const barbers = computed(() => barberStore.barbers);
     const dialog = ref(false);
     const loading = ref(false);
-    const category = ref({ name: null, origin: null, description: null });
+    const barber = ref({
+      first_name: null,
+      middle_name: null,
+      last_name: null,
+      sex: "Male",
+      phone: null,
+    });
     const valid = ref(false);
     const isEditing = ref(false);
     const isSubmitting = ref(false);
@@ -112,28 +130,29 @@ export default {
         (value && value.length >= 3) || "Minimum 3 characters.",
     };
 
-    const origins = [
-      { text: "Kitchen", value: "kitchen" },
-      { text: "Bartender", value: "bartender" },
-    ];
-
     onMounted(async () => {
       loading.value = true;
       try {
-        await categoryStore.fetchCategories();
+        await barberStore.fetchBarbers();
       } finally {
         loading.value = false;
       }
     });
 
     const openCreateDialog = () => {
-      category.value = { name: null, origin: null, description: null };
+      barber.value = {
+        first_name: null,
+        middle_name: null,
+        last_name: null,
+        sex: "Male",
+        phone: null,
+      };
       isEditing.value = false;
       dialog.value = true;
     };
 
     const openUpdateDialog = (item) => {
-      category.value = { ...item };
+      barber.value = { ...item };
       isEditing.value = true;
       dialog.value = true;
     };
@@ -143,39 +162,37 @@ export default {
       valid.value = false;
     };
 
-    const addCategory = async () => {
+    const addBarber = async () => {
       isSubmitting.value = true;
       try {
-        await categoryStore.addCategory(category.value);
+        await barberStore.addBarber(barber.value);
         closeDialog();
       } catch (error) {
-        console.error("Add category failed:", error);
+        console.error("Add barber failed:", error);
       } finally {
         isSubmitting.value = false;
       }
     };
 
-    const updateCategory = async () => {
+    const updateBarber = async () => {
       isSubmitting.value = true;
       try {
-        await categoryStore.updateCategory(category.value);
+        await barberStore.updateBarber(barber.value);
         closeDialog();
       } catch (error) {
-        console.error("Update category failed:", error);
+        console.error("Update barber failed:", error);
       } finally {
         isSubmitting.value = false;
       }
     };
 
-    const deleteCategory = async (id) => {
-      const confirmed = confirm(
-        "Are you sure you want to delete this category?"
-      );
+    const deleteBarber = async (id) => {
+      const confirmed = confirm("Are you sure you want to delete this barber?");
       if (confirmed) {
         try {
-          await categoryStore.trashCategory(id);
+          await barberStore.trashBarber(id);
         } catch (error) {
-          console.error("Delete category failed:", error);
+          console.error("Delete barber failed:", error);
         }
       }
     };
@@ -183,26 +200,26 @@ export default {
     const headers = [
       { title: "#", key: "index" },
       { title: "Name", key: "name" },
-      { title: "From", key: "origin" },
+      { title: "Sex", key: "sex" },
+      { title: "Phone", key: "phone" },
       { title: "Actions", key: "actions", sortable: false },
     ];
 
     return {
-      categories,
+      barbers,
       dialog,
       loading,
-      category,
+      barber,
       valid,
       isEditing,
       isSubmitting,
       rules,
-      origins,
       openCreateDialog,
       openUpdateDialog,
       closeDialog,
-      addCategory,
-      updateCategory,
-      deleteCategory,
+      addBarber,
+      updateBarber,
+      deleteBarber,
       headers,
     };
   },

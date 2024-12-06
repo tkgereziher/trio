@@ -34,7 +34,9 @@ const ROLE_VALUES = {
   KITCHEN: "kitchen",
   BARTENDER: "bartender",
   BARBER: "barber",
+  BARBER_CASHIER: "barber_cashier",
   ENTERTAINMENT: "entertainment",
+  STORE: "store",
 };
 
 const USER_STATE = {

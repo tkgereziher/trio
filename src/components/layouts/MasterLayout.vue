@@ -1,11 +1,17 @@
 <template>
-  <div style="background-image: url(/bg.png); height: 100vh">
+  <div
+    style="
+      background-image: url(/bg.png);
+      background-repeat: repeat;
+      height: 100vh;
+    "
+  >
     <v-navigation-drawer
       temporary
       width="320"
       height="100vh"
       :touchless="show"
-      v-model="show_mobile_navigation"
+      v-model="showMobileNav"
     >
       <div>
         <v-app-bar-title class="pl-2 pt-4 pb-5">
@@ -17,25 +23,12 @@
               font-weight: bolder;
             "
           >
-            Trio
+            Trio Sportbar & Launge
           </v-list-item>
         </v-app-bar-title>
       </div>
       <v-divider></v-divider>
       <v-list dense>
-        <!-- <div>
-          <v-list-item
-            title="Dashboard"
-            :to="{ name: 'home' }"
-            link
-            rounded="0"
-          >
-            <template v-slot:prepend>
-              <v-icon variant="text" icon="mdi-view-dashboard-outline"></v-icon>
-            </template>
-<v-tooltip activator="parent" location="start" size="" v-if="rail">Dashboard</v-tooltip>
-</v-list-item>
-</div> -->
         <div v-for="item in menuItems" :key="item">
           <v-divider
             v-if="item.type == 'divider'"
@@ -72,7 +65,7 @@
           size="x-large"
         ></v-app-bar-nav-icon>
         <v-app-bar-nav-icon
-          @click.stop="show_mobile_navigation = !show_mobile_navigation"
+          @click.stop="showMobileNav = !showMobileNav"
           size="x-large"
           v-else
         ></v-app-bar-nav-icon>
@@ -96,20 +89,18 @@
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props">
             <v-avatar color="#632097" size="45">
-              <span class="text-h4 text-uppercase">{{ getInitials }}</span>
+              <span class="text-h5 text-uppercase" style="font-weight: 700">{{
+                getInitials
+              }}</span>
             </v-avatar>
           </v-btn>
         </template>
         <v-list>
-          <v-list-item
-            link
-            class="SelectedTile text-uppercase"
-            @click="showMyAccount"
-            >{{ getUsername }}</v-list-item
-          >
-          <v-list-item link class="SelectedTile" @click="signOut"
-            >Logout</v-list-item
-          >
+          <v-list-item link class="text-capitalize">{{
+            getUsername
+          }}</v-list-item>
+          <v-divider></v-divider>
+          <v-list-item link @click="signOut">Logout</v-list-item>
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -174,9 +165,9 @@
       </v-main>
     </v-container>
 
-    <v-dialog v-model="logoutDialog" width="120" persistent>
+    <v-dialog v-model="logoutDialog" width="130" persistent>
       <v-card rounded>
-        <v-img height="120" class="align-center text-center">
+        <v-img height="130" class="align-center text-center">
           <v-progress-circular
             indeterminate
             color="#14A814"
@@ -202,7 +193,9 @@ import {
   CASHIER_MENU,
   BARTENDER_MENU,
   BARBER_MENU,
+  BARBER_CASHIER_MENU,
   ENTETAINMENT_MENU,
+  STORE_MENU,
 } from "@/constants/Menu";
 
 export default {
@@ -210,7 +203,7 @@ export default {
     rail: false,
     CONFIG: CONFIG,
     show: window.innerWidth >= 768,
-    show_mobile_navigation: false,
+    showMobileNav: false,
     userHome: "/",
     group: null,
     logoutDialog: false,
@@ -221,7 +214,9 @@ export default {
     KITCHEN_MENU: KITCHEN_MENU,
     BARTENDER_MENU: BARTENDER_MENU,
     ENTETAINMENT_MENU: ENTETAINMENT_MENU,
+    STORE_MENU: STORE_MENU,
     BARBER_MENU: BARBER_MENU,
+    BARBER_CASHIER_MENU: BARBER_CASHIER_MENU,
     commonStore: useCommonStore(),
     loginStore: useLoginStore(),
   }),
@@ -240,7 +235,7 @@ export default {
   methods: {
     onResize() {
       this.show = window.innerWidth >= 768;
-      this.show_mobile_navigation = false;
+      this.showMobileNav = false;
     },
     // ...mapActions(useIdentityStore, ["fetchMyDetail"]),
     ...mapActions(useLoginStore, ["logout"]),
@@ -286,6 +281,10 @@ export default {
           return this.ENTETAINMENT_MENU;
         case "barber":
           return this.BARBER_MENU;
+        case "barber_cashier":
+          return this.BARBER_CASHIER_MENU;
+        case "store":
+          return this.STORE_MENU;
         default:
           return [];
       }

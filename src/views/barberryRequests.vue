@@ -1,5 +1,5 @@
 <template>
-  <barberry role="admin" />
+  <barberry role="cashier" />
 </template>
 
 <script>

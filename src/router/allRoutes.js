@@ -35,6 +35,16 @@ export default [
     component: () => import("@/views/admin/waiter.vue"),
     meta: { title: "Waiters", scope: "Authorized", allowedRoles: ["admin"] },
   },
+  // {
+  //   path: "/barbers",
+  //   name: "barbers",
+  //   component: () => import("@/views/admin/barber.vue"),
+  //   meta: {
+  //     title: "Barbers",
+  //     scope: "Authorized",
+  //     allowedRoles: ["admin"],
+  //   },
+  // },
   {
     path: "/categories",
     name: "categories",
@@ -42,40 +52,54 @@ export default [
     meta: { title: "Categories", scope: "Authorized", allowedRoles: ["admin"] },
   },
   {
-    path: "/barberry-categories",
-    name: "barberryCategories",
+    path: "/barbery-categories",
+    name: "barberyCategories",
     component: () => import("@/views/admin/barberryCategory.vue"),
     meta: {
-      title: "Barberry Categories",
+      title: "Barbery Categories",
       scope: "Authorized",
       allowedRoles: ["admin"],
     },
   },
   {
-    path: "/barberry-services",
-    name: "barberryServices",
+    path: "/barbery-services",
+    name: "barberyServices",
     component: () => import("@/views/barberryServices.vue"),
     meta: {
-      title: "Barberry Services",
+      title: "Barbery Services",
       scope: "Authorized",
-      allowedRoles: ["barber"],
+      allowedRoles: ["admin"],
     },
   },
   {
-    path: "/barberry",
-    name: "barberry",
+    path: "/barbery-requests",
+    name: "barberryRequests",
+    component: () => import("@/views/barberryRequests.vue"),
+    meta: {
+      title: "Barbery Requests",
+      scope: "Authorized",
+      allowedRoles: ["barber_cashier"],
+    },
+  },
+  {
+    path: "/barbery",
+    name: "barbery",
     component: () => import("@/views/barberry.vue"),
     meta: {
-      title: "Barberry Services",
+      title: "Barbery Services",
       scope: "Authorized",
-      allowedRoles: ["admin"],
+      allowedRoles: ["barber"],
     },
   },
   {
     path: "/products",
     name: "products",
     component: () => import("@/views/admin/product.vue"),
-    meta: { title: "Products", scope: "Authorized", allowedRoles: ["admin"] },
+    meta: {
+      title: "Products",
+      scope: "Authorized",
+      allowedRoles: ["admin", "store"],
+    },
   },
 
   //Cashier

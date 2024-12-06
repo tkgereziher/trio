@@ -12,10 +12,17 @@
         class="elevation-1"
         item-key="id"
         :loading="loading"
+        hide-default-footer
+        :items-per-page="products.length"
       >
         <template #item.index="{ index }">
           {{ index + 1 }}
         </template>
+        <template #item.bar_price="{ item }">{{
+          item.bar_price && item.bar_price > 0
+            ? item.bar_price
+            : "Not Available"
+        }}</template>
         <template #item.name="{ item }">
           <v-avatar :size="40" class="mr-1">
             <v-img :src="item.file_link" style="background-color: grey"></v-img>
@@ -83,6 +90,14 @@
               type="number"
             ></v-text-field>
             <v-text-field
+              v-model="product.bar_price"
+              variant="outlined"
+              density="compact"
+              color="#632097"
+              label="Bar price"
+              type="number"
+            ></v-text-field>
+            <v-text-field
               v-model="product.quantity"
               variant="outlined"
               density="compact"
@@ -98,7 +113,7 @@
               color="#632097"
               label="Image"
               type="file"
-              @update:model-value="uploadFile"
+              @change="uploadFile"
             ></v-text-field>
           </v-form>
         </v-card-text>
@@ -177,8 +192,15 @@ export default {
 
     const addProduct = async () => {
       isSubmitting.value = true;
+      const productData = new FormData();
+      productData.append("name", product.value.name);
+      productData.append("category_id", product.value.category_id);
+      productData.append("quantity", product.value.quantity);
+      productData.append("price", product.value.price);
+      productData.append("description", product.value.description);
+      productData.append("attachment", product.value.attachment);
       try {
-        await productStore.addProduct(product.value);
+        await productStore.addProduct(productData);
         closeDialog();
       } catch (error) {
         console.error("Add product failed:", error);
@@ -189,8 +211,17 @@ export default {
 
     const updateProduct = async () => {
       isSubmitting.value = true;
+      const productData = new FormData();
+      productData.append("name", product.value.name);
+      productData.append("category_id", product.value.category_id);
+      productData.append("quantity", product.value.quantity);
+      productData.append("price", product.value.price);
+      productData.append("bar_price", product.value.bar_price);
+      productData.append("description", product.value.description);
+      if (product.value.attachment)
+        productData.append("attachment", product.value.attachment);
       try {
-        await productStore.updateProduct(product.value);
+        await productStore.updateProduct(productData, product.value.id);
         closeDialog();
       } catch (error) {
         console.error("Update product failed:", error);
@@ -217,7 +248,8 @@ export default {
       { title: "Name", key: "name" },
       { title: "Category", key: "category.name" },
       { title: "Unit Price", key: "price" },
-      { title: "Quantity", key: "quantity" },
+      { title: "Bar Price", key: "bar_price" },
+      // { title: "Quantity", key: "quantity" },
       { title: "Actions", key: "actions", sortable: false },
     ];
 

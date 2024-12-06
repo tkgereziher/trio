@@ -1,5 +1,11 @@
 <template>
-  <div style="background-image: url(/bg.png); height: 100vh">
+  <div
+    style="
+      background-image: url(/bg.png);
+      background-repeat: repeat;
+      height: 100vh;
+    "
+  >
     <v-container fill-height class="d-flex justify-center align-center">
       <v-card flat class="pa-4 login w-100 w-md-50" min-height="90vh">
         <v-card-title>

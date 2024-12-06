@@ -100,26 +100,31 @@
 
     <!-- Create and Update Dialog -->
     <v-dialog v-model="formDialog" width="400">
-      <v-card>
-        <v-card-title>
-          <Close @click="closeDialog" />
-          <span v-if="isEditing">Edit</span>
-          <span v-else>Add</span>
-          Coin
-          <v-btn
-            @click="isEditing ? updateCoin() : addCoin()"
-            :color="isEditing ? '#14414b' : '#632097'"
-            width="160"
-            class="float-right text-none"
-            prepend-icon="mdi-check-all"
-            :disabled="!valid || isSubmitting"
-            :loading="isSubmitting"
-            >{{ isEditing ? "Save Changes" : "Save" }}</v-btn
-          >
-        </v-card-title>
-        <v-divider class="mb-3"></v-divider>
-        <v-card-text>
-          <v-form ref="form" v-model="valid">
+      <v-form
+        ref="form"
+        v-model="valid"
+        @submit.prevent="isEditing ? updateCoin() : addCoin()"
+      >
+        <v-card>
+          <v-card-title>
+            <Close @click="closeDialog" />
+            <span v-if="isEditing">Edit</span>
+            <span v-else>Add</span>
+            Coin
+            <v-btn
+              @click="isEditing ? updateCoin() : addCoin()"
+              :color="isEditing ? '#14414b' : '#632097'"
+              width="160"
+              class="float-right text-none"
+              prepend-icon="mdi-check-all"
+              :disabled="!valid || isSubmitting"
+              :loading="isSubmitting"
+              type="submit"
+              >{{ isEditing ? "Save Changes" : "Save" }}</v-btn
+            >
+          </v-card-title>
+          <v-divider class="mb-3"></v-divider>
+          <v-card-text>
             <v-text-field
               v-model="coin.amount"
               variant="outlined"
@@ -128,9 +133,9 @@
               label="Amount"
               :rules="[rules.required]"
             ></v-text-field>
-          </v-form>
-        </v-card-text>
-      </v-card>
+          </v-card-text>
+        </v-card>
+      </v-form>
     </v-dialog>
   </v-card>
 </template>

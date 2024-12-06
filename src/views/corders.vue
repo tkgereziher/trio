@@ -1,5 +1,5 @@
 <template>
-  <v-card min-height="80vh">
+  <v-card min-height="80vh" :loading="loading">
     <v-card-title> Active Orders </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
@@ -8,19 +8,35 @@
         :items="orders"
         class="elevation-1"
         item-key="id"
-        :loading="loading"
       >
         <template #item.index="{ index }">
           {{ index + 1 }}
         </template>
         <template #item.items="{ item }">
-          <p
-            v-for="(product, i) in item.order_items"
-            :key="product.id"
-            class="py-1"
-          >
-            {{ i + 1 }}. {{ product.product.name }}
-          </p>
+          <v-table class="my-2">
+            <tbody>
+              <tr
+                v-for="(product, i) in item.order_items"
+                :key="product.id"
+                class="py-0 my-n3"
+              >
+                <!-- <td>{{ i + 1 }}.</td> -->
+                <td>
+                  {{ product.product.name }}
+                  <v-chip :color="getItemColor(product.state)" size="x-small">{{
+                    getItemStatus(product.state)
+                  }}</v-chip>
+                </td>
+                <td
+                  :class="product.state == 'rejected' ? 'text-linethrough' : ''"
+                >
+                  <b>{{
+                    Number(product.quantity * product.unit_price).toFixed(2)
+                  }}</b>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
         </template>
 
         <template #item.created_at="{ item }">
@@ -71,7 +87,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import useOrderStore from "@/stores/order";
 import moment from "moment";
 export default {
@@ -91,13 +107,50 @@ export default {
 
     const origins = ["Kitchen", "Bar Tender"];
 
-    onMounted(async () => {
-      loading.value = true;
-      try {
-        await orderStore.fetchOrders();
-      } finally {
-        loading.value = false;
-      }
+    onMounted(() => {
+      const audio = new Audio("/src/assets/notify.m4a");
+      let userInteracted = ref(false);
+
+      // Enable audio after user interaction
+      const enableAudio = () => {
+        userInteracted.value = true;
+        audio.muted = true;
+        audio
+          .play()
+          .then(() => {
+            audio.pause(); // Pause to prepare for future playback
+            audio.muted = false;
+          })
+          .catch((err) => console.error("Audio initialization failed", err));
+        window.removeEventListener("click", enableAudio);
+      };
+
+      window.addEventListener("click", enableAudio);
+
+      const fetchOrders = async () => {
+        loading.value = true;
+        try {
+          await orderStore.fetchOrders();
+          if (userInteracted.value) {
+            audio.play().catch((err) => {
+              console.error("Audio play failed", err);
+            });
+          }
+        } finally {
+          loading.value = false;
+        }
+      };
+
+      // Initial fetch
+      fetchOrders();
+
+      // Fetch every 3 minutes
+      const intervalId = setInterval(fetchOrders, 18000);
+
+      onUnmounted(() => {
+        clearInterval(intervalId);
+        window.removeEventListener("click", enableAudio);
+      });
     });
 
     const openUpdateStateDialog = (itemId, state) => {
@@ -131,11 +184,39 @@ export default {
       }
     };
 
+    const getItemStatus = (state) => {
+      switch (state) {
+        case "new":
+          return "Pending";
+        case "in_progress":
+          return "Inprogress";
+        case "ready_for_pickup":
+          return "Ready";
+        case "rejected":
+          return "Rejected";
+        default:
+          return "Unknown";
+      }
+    };
+    const getItemColor = (state) => {
+      switch (state) {
+        case "new":
+          return "info";
+        case "in_progress":
+          return "primary";
+        case "ready_for_pickup":
+          return "success";
+        case "rejected":
+          return "red";
+        default:
+          return "";
+      }
+    };
     const headers = [
       { title: "#", key: "index" },
       { title: "Waiter", key: "waiter.name" },
       { title: "Items", key: "items" },
-      { title: "Payment", key: "total_price" },
+      { title: "Payment", key: "price" },
       { title: "Ordered at", key: "created_at" },
       { title: "Actions", key: "actions", sortable: false },
     ];
@@ -149,6 +230,8 @@ export default {
       origins,
       closeDialog,
       updateItemState,
+      getItemColor,
+      getItemStatus,
       headers,
       formattedDate,
       openUpdateStateDialog,
@@ -158,5 +241,7 @@ export default {
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+.text-linethrough {
+  text-decoration: line-through;
+}
 </style>

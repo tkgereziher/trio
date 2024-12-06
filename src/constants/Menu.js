@@ -12,6 +12,11 @@ const SUPER_ADMIN_MENU = [
 ];
 const ADMIN_MENU = [
   {
+    title: "Dashboard",
+    path: "home",
+    icon: "mdi-view-dashboard",
+  },
+  {
     title: "Products",
     path: "products",
     icon: "mdi-food-variant",
@@ -25,13 +30,13 @@ const ADMIN_MENU = [
     type: "divider",
   },
   {
-    title: "Barberry Categories",
-    path: "barberryCategories",
+    title: "Barbery Categories",
+    path: "barberyCategories",
     icon: "mdi-crosshairs-gps",
   },
   {
-    title: "Barberry Services",
-    path: "barberry",
+    title: "Barbery Services",
+    path: "barberyServices",
     icon: "mdi-content-cut",
   },
 
@@ -49,8 +54,18 @@ const ADMIN_MENU = [
     path: "waiters",
     icon: "mdi-city",
   },
+  // {
+  //   title: "Barbers",
+  //   path: "barbers",
+  //   icon: "mdi-account-plus",
+  // },
 ];
 const WAITER_MENU = [
+  {
+    title: "Dashboard",
+    path: "home",
+    icon: "mdi-view-dashboard",
+  },
   {
     title: "Order",
     path: "order",
@@ -65,6 +80,11 @@ const WAITER_MENU = [
 
 const CASHIER_MENU = [
   {
+    title: "Dashboard",
+    path: "home",
+    icon: "mdi-view-dashboard",
+  },
+  {
     title: "Active Orders",
     path: "corders",
     icon: "mdi-menu",
@@ -78,6 +98,11 @@ const CASHIER_MENU = [
 
 const KITCHEN_MENU = [
   {
+    title: "Dashboard",
+    path: "home",
+    icon: "mdi-view-dashboard",
+  },
+  {
     title: "Active Orders",
     path: "korderItems",
     icon: "mdi-menu",
@@ -85,6 +110,11 @@ const KITCHEN_MENU = [
 ];
 
 const BARTENDER_MENU = [
+  {
+    title: "Dashboard",
+    path: "home",
+    icon: "mdi-view-dashboard",
+  },
   {
     title: "Active Orders",
     path: "borderItems",
@@ -94,6 +124,11 @@ const BARTENDER_MENU = [
 
 const ENTETAINMENT_MENU = [
   {
+    title: "Dashboard",
+    path: "home",
+    icon: "mdi-view-dashboard",
+  },
+  {
     title: "Coins",
     path: "coins",
     icon: "mdi-account-multiple",
@@ -102,9 +137,23 @@ const ENTETAINMENT_MENU = [
 
 const BARBER_MENU = [
   {
-    title: "Barberry Services",
-    path: "barberryServices",
+    title: "Barbery Services",
+    path: "barbery",
     icon: "mdi-content-cut",
+  },
+];
+const BARBER_CASHIER_MENU = [
+  {
+    title: "Barbery Requests",
+    path: "barberryRequests",
+    icon: "mdi-content-cut",
+  },
+];
+const STORE_MENU = [
+  {
+    title: "Products",
+    path: "products",
+    icon: "mdi-food-variant",
   },
 ];
 
@@ -117,4 +166,6 @@ export {
   BARTENDER_MENU,
   ENTETAINMENT_MENU,
   BARBER_MENU,
+  BARBER_CASHIER_MENU,
+  STORE_MENU,
 };

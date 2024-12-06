@@ -189,8 +189,8 @@ export default {
 
           products.value = order.value.order_items.map((item) => ({
             ...item.product,
+            quantity: item.quantity,
           }));
-          console.log(products.value);
         }
       } finally {
         loading.value = false;

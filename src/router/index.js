@@ -13,21 +13,41 @@ const router = createRouter({
       component: () => import("@/views/Login.vue"),
       meta: {
         title: "Login",
-        scope: "NonAuth", // Non-authenticated users
+        scope: "NonAuth",
+      },
+    },
+    {
+      path: "/",
+      name: "home",
+      component: () => import("@/views/dashboard.vue"),
+      meta: {
+        title: "Home",
+        scope: "Authorized",
+      },
+    },
+    {
+      path: "/",
+      name: "dashboard",
+      component: () => import("@/views/dashboard.vue"),
+      meta: {
+        title: "Dashboard",
+        scope: "Authorized",
       },
     },
   ],
 });
 
 const roleRedirects = {
-  [ROLE_VALUES.ENTERTAINMENT]: "/coins",
-  [ROLE_VALUES.BARTENDER]: "/bar-orders",
-  [ROLE_VALUES.KITCHEN]: "/kitchen-orders",
-  [ROLE_VALUES.CASHIER]: "/cashier-orders",
-  [ROLE_VALUES.WAITER]: "/orders",
-  [ROLE_VALUES.ADMIN]: "/products",
-  [ROLE_VALUES.BARBER]: "/barberry-services",
-  [ROLE_VALUES.SUPERADMIN]: "/admins",
+  [ROLE_VALUES.ENTERTAINMENT]: "coins",
+  [ROLE_VALUES.BARTENDER]: "dashboard",
+  [ROLE_VALUES.KITCHEN]: "dashboard",
+  [ROLE_VALUES.CASHIER]: "dashboard",
+  [ROLE_VALUES.WAITER]: "orders",
+  [ROLE_VALUES.ADMIN]: "dashboard",
+  [ROLE_VALUES.BARBER]: "barbery",
+  [ROLE_VALUES.STORE]: "products",
+  [ROLE_VALUES.BARBER_CASHIER]: "barberryRequests",
+  [ROLE_VALUES.SUPERADMIN]: "dashboard",
 };
 
 router.beforeEach((to, from, next) => {
@@ -59,8 +79,18 @@ router.beforeEach((to, from, next) => {
       }
 
       if (to.name === "home") {
-        const redirectTo = roleRedirects[userRole] || "/"; // Default to root if no match
-        return next({ path: redirectTo });
+        const redirectTo = roleRedirects[userRole] || "dashboard"; // Default to root if no match
+        if (
+          [
+            ROLE_VALUES.STORE,
+            ROLE_VALUES.BARBER_CASHIER,
+            ROLE_VALUES.BARBER,
+            ROLE_VALUES.WAITER,
+            ROLE_VALUES.ENTERTAINMENT,
+          ].includes(userRole)
+        )
+          return next({ name: redirectTo });
+        else return next();
       }
 
       // Admin role check: If allowedRoles are defined, check if the user role is in the allowed roles for this route

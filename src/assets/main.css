@@ -90,7 +90,3 @@ nav>div>div>div>.v-list-item:hover {
 .brand2 {
     color: red;
 }
-
-body {
-    background-image: url(/bg.png) !important;
-}

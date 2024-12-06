@@ -12,6 +12,8 @@
         class="elevation-1"
         item-key="id"
         :loading="loading"
+        hide-default-footer
+        :items-per-page="waiters.length"
       >
         <template #item.index="{ index }">
           {{ index + 1 }}
@@ -345,7 +347,7 @@ export default {
     const headers = [
       { title: "#", key: "index" },
       { title: "Name", key: "name" },
-      { title: "Phine", key: "phone" },
+      { title: "Phone", key: "phone" },
       { title: "Actions", key: "actions", sortable: false },
     ];
 

@@ -1,7 +1,7 @@
 <template>
   <v-card min-height="80vh">
     <v-card-title>
-      Barberry Categories
+      Barbery Categories
       <CreateNew @click="openCreateDialog" />
     </v-card-title>
     <v-divider></v-divider>
@@ -12,6 +12,8 @@
         class="elevation-1"
         item-key="id"
         :loading="loading"
+        hide-default-footer
+        :items-per-page="categories.length"
       >
         <template #item.index="{ index }">
           {{ index + 1 }}
@@ -30,7 +32,7 @@
       </v-data-table>
     </v-card-text>
     <!-- Create and Update Dialog -->
-    <v-dialog v-model="dialog" width="600px">
+    <v-dialog v-model="dialog" width="500">
       <v-form
         ref="form"
         v-model="valid"

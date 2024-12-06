@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.PRODUCT_BURL;
+const API_URL = Api.BARBER_BURL;
 import useSnackStore from "@/stores/snack";
 const snack = useSnackStore();
-const useProductStore = defineStore("product", {
+const useBarberStore = defineStore("barber", {
   state: () => ({
-    products: [],
-    product: null,
+    barbers: [],
+    barber: null,
   }),
 
   actions: {
-    async fetchProducts() {
+    async fetchBarbers(initiator = null) {
       await axios
-        .get(API_URL)
+        .get(API_URL + `?initiator=${initiator}`)
         .then((response) => {
-          this.products = response.data;
+          this.barbers = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -23,11 +23,11 @@ const useProductStore = defineStore("product", {
         });
     },
 
-    async fetchProduct(id) {
+    async fetchBarber(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.product = response.data;
+          this.barber = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -35,31 +35,11 @@ const useProductStore = defineStore("product", {
         });
     },
 
-    async addProduct(data) {
-      try {
-        const response = await axios.post(API_URL, data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        this.products.unshift(response.data);
-        snack.showMessage(response);
-        return response;
-      } catch (error) {
-        snack.showMessage(error.response);
-        return Promise.reject(error);
-      }
-    },
-
-    async updateProduct(data, id) {
+    async addBarber(data) {
       await axios
-        .post(API_URL + `/${id}`, data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        .post(API_URL, data)
         .then((response) => {
-          const object = this.products.find(
-            (item) => item.id === response.data.id
-          );
-          if (object) Object.assign(object, response.data);
-          else this.product = response.data;
+          this.barbers.push(response.data);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -69,11 +49,29 @@ const useProductStore = defineStore("product", {
         });
     },
 
-    async trashProduct(id) {
+    async updateBarber(data) {
+      await axios
+        .put(API_URL + `/${data.id}`, data)
+        .then((response) => {
+          const object = this.barbers.find(
+            (item) => item.id === response.data.id
+          );
+          if (object) Object.assign(object, response.data);
+          else this.barber = response.data;
+          snack.showMessage(response);
+          return Promise.resolve();
+        })
+        .catch((error) => {
+          snack.showMessage(error.response);
+          return Promise.reject(error);
+        });
+    },
+
+    async trashBarber(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.products = this.products.filter((item) => item.id !== id);
+          this.barbers = this.barbers.filter((item) => item.id !== id);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -85,4 +83,4 @@ const useProductStore = defineStore("product", {
   },
 });
 
-export default useProductStore;
+export default useBarberStore;
