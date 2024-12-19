@@ -94,7 +94,7 @@
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Bar price"
+              label="Club price"
               type="number"
             ></v-text-field>
             <v-text-field
@@ -248,7 +248,7 @@ export default {
       { title: "Name", key: "name" },
       { title: "Category", key: "category.name" },
       { title: "Unit Price", key: "price" },
-      { title: "Bar Price", key: "club_price" },
+      { title: "Club Price", key: "club_price" },
       // { title: "Quantity", key: "quantity" },
       { title: "Actions", key: "actions", sortable: false },
     ];
