@@ -18,9 +18,9 @@
         <template #item.index="{ index }">
           {{ index + 1 }}
         </template>
-        <template #item.bar_price="{ item }">{{
-          item.bar_price && item.bar_price > 0
-            ? item.bar_price
+        <template #item.club_price="{ item }">{{
+          item.club_price && item.club_price > 0
+            ? item.club_price
             : "Not Available"
         }}</template>
         <template #item.name="{ item }">
@@ -90,7 +90,7 @@
               type="number"
             ></v-text-field>
             <v-text-field
-              v-model="product.bar_price"
+              v-model="product.club_price"
               variant="outlined"
               density="compact"
               color="#632097"
@@ -216,7 +216,7 @@ export default {
       productData.append("category_id", product.value.category_id);
       productData.append("quantity", product.value.quantity);
       productData.append("price", product.value.price);
-      productData.append("bar_price", product.value.bar_price);
+      productData.append("club_price", product.value.club_price);
       productData.append("description", product.value.description);
       if (product.value.attachment)
         productData.append("attachment", product.value.attachment);
@@ -248,7 +248,7 @@ export default {
       { title: "Name", key: "name" },
       { title: "Category", key: "category.name" },
       { title: "Unit Price", key: "price" },
-      { title: "Bar Price", key: "bar_price" },
+      { title: "Bar Price", key: "club_price" },
       // { title: "Quantity", key: "quantity" },
       { title: "Actions", key: "actions", sortable: false },
     ];

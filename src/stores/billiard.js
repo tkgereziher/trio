@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.COIN_BURL;
+const API_URL = Api.BILLIARD_BURL;
 import useSnackStore from "@/stores/snack";
 const snack = useSnackStore();
-const useCoinStore = defineStore("coin", {
+const useBilliardStore = defineStore("billiard", {
   state: () => ({
-    coins: [],
-    coin: null,
+    billiards: [],
+    billiard: null,
   }),
 
   actions: {
-    async fetchCoins(initiator = null, date = null) {
+    async fetchBilliards(initiator = null, date = null) {
       await axios
         .get(API_URL + `?initiator=${initiator}&date=${date}`)
         .then((response) => {
-          this.coins = response.data;
+          this.billiards = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -23,11 +23,11 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async fetchCoin(id) {
+    async fetchBilliard(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.coin = response.data;
+          this.billiard = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -35,11 +35,11 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async addCoin(data) {
+    async addBilliard(data) {
       await axios
         .post(API_URL, data)
         .then((response) => {
-          this.coins.unshift(response.data);
+          this.billiards.unshift(response.data);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -49,15 +49,15 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async updateCoin(data) {
+    async updateBilliard(data) {
       await axios
         .put(API_URL + `/${data.id}`, data)
         .then((response) => {
-          const object = this.coins.find(
+          const object = this.billiards.find(
             (item) => item.id === response.data.id
           );
           if (object) Object.assign(object, response.data);
-          else this.coin = response.data;
+          else this.billiard = response.data;
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -67,11 +67,11 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async trashCoin(id) {
+    async trashBilliard(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.coins = this.coins.filter((item) => item.id !== id);
+          this.billiards = this.billiards.filter((item) => item.id !== id);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -83,4 +83,4 @@ const useCoinStore = defineStore("coin", {
   },
 });
 
-export default useCoinStore;
+export default useBilliardStore;

@@ -90,6 +90,8 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import useOrderStore from "@/stores/order";
 import moment from "moment";
+import { FETCHING_INTERVAL } from "@/constants/";
+
 export default {
   setup() {
     const orderStore = useOrderStore();
@@ -145,7 +147,7 @@ export default {
       fetchOrders();
 
       // Fetch every 3 minutes
-      const intervalId = setInterval(fetchOrders, 18000);
+      const intervalId = setInterval(fetchOrders, FETCHING_INTERVAL);
 
       onUnmounted(() => {
         clearInterval(intervalId);

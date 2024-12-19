@@ -10,6 +10,7 @@ const SUPER_ADMIN_MENU = [
     icon: "mdi-account-multiple-plus",
   },
 ];
+
 const ADMIN_MENU = [
   {
     title: "Dashboard",
@@ -39,7 +40,29 @@ const ADMIN_MENU = [
     path: "barberyServices",
     icon: "mdi-content-cut",
   },
-
+  {
+    title: "Product Requests",
+    path: "adminProductRequests",
+    icon: "mdi-information",
+  },
+  {
+    type: "divider",
+  },
+  {
+    title: "Coins",
+    path: "approvedcoinRequests",
+    icon: "mdi-cash",
+  },
+  {
+    title: "Billiard",
+    path: "approvedbilliardRequests",
+    icon: "mdi-gamepad",
+  },
+  {
+    title: "Playstation",
+    path: "approvedplaystationRequests",
+    icon: "mdi-gamepad-variant",
+  },
   {
     type: "divider",
   },
@@ -60,6 +83,7 @@ const ADMIN_MENU = [
   //   icon: "mdi-account-plus",
   // },
 ];
+
 const WAITER_MENU = [
   {
     title: "Dashboard",
@@ -90,8 +114,18 @@ const CASHIER_MENU = [
     icon: "mdi-menu",
   },
   {
-    title: "Coin Requests",
+    title: "Coin",
     path: "coinRequests",
+    icon: "mdi-cash",
+  },
+  {
+    title: "Billiard",
+    path: "billiardRequests",
+    icon: "mdi-gamepad",
+  },
+  {
+    title: "Playstation",
+    path: "playstationRequests",
     icon: "mdi-gamepad-variant",
   },
 ];
@@ -107,6 +141,11 @@ const KITCHEN_MENU = [
     path: "korderItems",
     icon: "mdi-menu",
   },
+  {
+    title: "Product Requests",
+    path: "kitchenProductRequests",
+    icon: "mdi-information",
+  },
 ];
 
 const BARTENDER_MENU = [
@@ -120,6 +159,11 @@ const BARTENDER_MENU = [
     path: "borderItems",
     icon: "mdi-menu",
   },
+  {
+    title: "Product Requests",
+    path: "barProductRequests",
+    icon: "mdi-information",
+  },
 ];
 
 const ENTETAINMENT_MENU = [
@@ -129,9 +173,19 @@ const ENTETAINMENT_MENU = [
     icon: "mdi-view-dashboard",
   },
   {
-    title: "Coins",
+    title: "Coin",
     path: "coins",
-    icon: "mdi-account-multiple",
+    icon: "mdi-cash",
+  },
+  {
+    title: "Billiard",
+    path: "billiards",
+    icon: "mdi-gamepad",
+  },
+  {
+    title: "Playstation",
+    path: "playstations",
+    icon: "mdi-gamepad-variant",
   },
 ];
 
@@ -142,6 +196,7 @@ const BARBER_MENU = [
     icon: "mdi-content-cut",
   },
 ];
+
 const BARBER_CASHIER_MENU = [
   {
     title: "Barbery Requests",
@@ -149,10 +204,21 @@ const BARBER_CASHIER_MENU = [
     icon: "mdi-content-cut",
   },
 ];
+
 const STORE_MENU = [
   {
-    title: "Products",
-    path: "products",
+    title: "Dashboard",
+    path: "dashboard",
+    icon: "mdi-view-dashboard",
+  },
+  {
+    title: "Imports",
+    path: "imports",
+    icon: "mdi-food-variant",
+  },
+  {
+    title: "Requests",
+    path: "storeProductRequests",
     icon: "mdi-food-variant",
   },
 ];

@@ -1,3 +1,4 @@
+const FETCHING_INTERVAL = 200000;
 const ERROR_MESSAGES = {
   204: "No content.",
   400: "Bad Request.",
@@ -37,6 +38,9 @@ const ROLE_VALUES = {
   BARBER_CASHIER: "barber_cashier",
   ENTERTAINMENT: "entertainment",
   STORE: "store",
+  CLUB_WAITER: "club_waiter",
+  CLUB_CASHIER: "club_waiter",
+  CLUB_WAITER: "club_waiter",
 };
 
 const USER_STATE = {
@@ -160,6 +164,7 @@ const CONFIG = {
 const COUNTRY = ["Ethiopia", "Eritrea", "Somalia", "South Sudan", "Sudan"];
 
 export {
+  FETCHING_INTERVAL,
   ERROR_MESSAGES,
   ROLE_VALUES,
   OCCUPATION,

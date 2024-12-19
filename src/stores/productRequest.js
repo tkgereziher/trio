@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.COIN_BURL;
+const API_URL = Api.PRODUCT_REQUEST_BURL;
 import useSnackStore from "@/stores/snack";
 const snack = useSnackStore();
-const useCoinStore = defineStore("coin", {
+const useproductRequestStore = defineStore("productRequest", {
   state: () => ({
-    coins: [],
-    coin: null,
+    productRequests: [],
+    productRequest: null,
   }),
 
   actions: {
-    async fetchCoins(initiator = null, date = null) {
+    async fetchProductRequests(initiator = null, date = null) {
       await axios
         .get(API_URL + `?initiator=${initiator}&date=${date}`)
         .then((response) => {
-          this.coins = response.data;
+          this.productRequests = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -23,11 +23,11 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async fetchCoin(id) {
+    async fetchProductRequest(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.coin = response.data;
+          this.productRequest = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -35,11 +35,11 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async addCoin(data) {
+    async addProductRequest(data) {
       await axios
         .post(API_URL, data)
         .then((response) => {
-          this.coins.unshift(response.data);
+          this.productRequests.unshift(response.data);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -49,15 +49,15 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async updateCoin(data) {
+    async updateProductRequest(data) {
       await axios
         .put(API_URL + `/${data.id}`, data)
         .then((response) => {
-          const object = this.coins.find(
+          const object = this.productRequests.find(
             (item) => item.id === response.data.id
           );
           if (object) Object.assign(object, response.data);
-          else this.coin = response.data;
+          else this.productRequest = response.data;
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -67,11 +67,13 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async trashCoin(id) {
+    async trashProductRequest(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.coins = this.coins.filter((item) => item.id !== id);
+          this.productRequests = this.productRequests.filter(
+            (item) => item.id !== id
+          );
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -83,4 +85,4 @@ const useCoinStore = defineStore("coin", {
   },
 });
 
-export default useCoinStore;
+export default useproductRequestStore;

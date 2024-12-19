@@ -7,6 +7,7 @@
     <cashier-dashboard v-else-if="userRole == ROLE_VALUES.CASHIER" />
     <kitchen-dashboard v-else-if="userRole == ROLE_VALUES.KITCHEN" />
     <waiter-dashboard v-else-if="userRole == ROLE_VALUES.WAITER" />
+    <store-dashboard v-else-if="userRole == ROLE_VALUES.STORE" />
   </v-card>
 </template>
 
@@ -19,6 +20,7 @@ import barDashboard from "@/components/dashboard/barDashboard.vue";
 import cashierDashboard from "@/components/dashboard/cashierDashboard.vue";
 import kitchenDashboard from "@/components/dashboard/kitchenDashboard.vue";
 import waiterDashboard from "@/components/dashboard/waiterDashboard.vue";
+import storeDashboard from "@/components/dashboard/storeDashboard.vue";
 import { ROLE_VALUES } from "@/constants/";
 
 export default {
@@ -30,6 +32,7 @@ export default {
     cashierDashboard,
     kitchenDashboard,
     waiterDashboard,
+    storeDashboard,
   },
   data() {
     return {

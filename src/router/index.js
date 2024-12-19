@@ -2,11 +2,17 @@ import { createRouter, createWebHistory } from "vue-router";
 import allRoutes from "./allRoutes";
 import useLoginStore from "@/stores/login";
 import { ROLE_VALUES } from "@/constants/";
+import entertainRoutes from "./entertainRoutes";
+import adminRoutes from "./adminRoutes";
+import storeRoutes from "./storeRoutes";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...allRoutes,
+    ...entertainRoutes,
+    ...adminRoutes,
+    ...storeRoutes,
     {
       path: "/login",
       name: "login",
@@ -45,7 +51,7 @@ const roleRedirects = {
   [ROLE_VALUES.WAITER]: "orders",
   [ROLE_VALUES.ADMIN]: "dashboard",
   [ROLE_VALUES.BARBER]: "barbery",
-  [ROLE_VALUES.STORE]: "products",
+  [ROLE_VALUES.STORE]: "dashboard",
   [ROLE_VALUES.BARBER_CASHIER]: "barberryRequests",
   [ROLE_VALUES.SUPERADMIN]: "dashboard",
 };

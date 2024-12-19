@@ -1,23 +1,26 @@
 <template>
   <v-card min-height="80vh">
     <v-card-title
-      >Coin Requests
+      >Product Requests
       <create-new
         @click="openCreateDialog"
-        v-if="role && role == 'entertainment'"
+        v-if="role && (role == 'kitchen' || role == 'bartender')"
       />
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="coins"
+        :items="productRequests"
         class="elevation-1"
         item-key="id"
         :loading="loading"
       >
         <template #item.user="{ item }">
           <span class="text-capitalize">{{ item.user?.name }}</span>
+        </template>
+        <template #item.product="{ item }">
+          <span class="text-capitalize">{{ item.product?.name }}</span>
         </template>
         <template #item.index="{ index }">
           {{ index + 1 }}
@@ -31,7 +34,7 @@
           {{ formattedDate(item.created_at) }}
         </template>
         <template #item.actions="{ item }">
-          <span v-if="role && role == 'entertainment'">
+          <span v-if="role && (role == 'kitchen' || role == 'bartender')">
             <v-icon
               color="info"
               v-if="item.state == 'new'"
@@ -46,7 +49,7 @@
               >mdi-delete</v-icon
             >
           </span>
-          <span v-if="role && role == 'cashier'">
+          <span v-if="role && role == 'store'">
             <v-btn
               color="primary"
               size="small"
@@ -103,16 +106,18 @@
       <v-form
         ref="form"
         v-model="valid"
-        @submit.prevent="isEditing ? updateCoin() : addCoin()"
+        @submit.prevent="
+          isEditing ? updateProductRequest() : addProductRequest()
+        "
       >
         <v-card>
           <v-card-title>
             <Close @click="closeDialog" />
             <span v-if="isEditing">Edit</span>
             <span v-else>Add</span>
-            Coin
+            Request
             <v-btn
-              @click="isEditing ? updateCoin() : addCoin()"
+              @click="isEditing ? updateProductRequest() : addProductRequest()"
               :color="isEditing ? '#14414b' : '#632097'"
               width="160"
               class="float-right text-none"
@@ -125,8 +130,19 @@
           </v-card-title>
           <v-divider class="mb-3"></v-divider>
           <v-card-text>
+            <v-autocomplete
+              v-model="productRequest.product_id"
+              variant="outlined"
+              density="compact"
+              color="#632097"
+              label="Product"
+              :rules="[rules.required]"
+              :items="products"
+              item-title="name"
+              item-value="id"
+            ></v-autocomplete>
             <v-text-field
-              v-model="coin.amount"
+              v-model="productRequest.amount"
               variant="outlined"
               density="compact"
               color="#632097"
@@ -141,10 +157,10 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import useCoinStore from "@/stores/coin";
+import { ref, computed, onMounted } from "vue";
+import useProductRequestStore from "@/stores/productRequest";
+import useProductStore from "@/stores/admin/product";
 import moment from "moment";
-import { FETCHING_INTERVAL } from "@/constants/";
 
 export default {
   props: {
@@ -154,14 +170,16 @@ export default {
     },
   },
   setup(props) {
-    const coinStore = useCoinStore();
-    const coins = computed(() => coinStore.coins);
+    const productRequestStore = useProductRequestStore();
+    const productStore = useProductStore();
+    const productRequests = computed(() => productRequestStore.productRequests);
+    const products = computed(() => productStore.products);
     const dialog = ref(false);
     const valid = ref(false);
     const formDialog = ref(false);
     const selectedState = ref(null);
     const selectedItemId = ref(null);
-    const coin = ref({ amount: null });
+    const productRequest = ref({ amount: null });
     const loading = ref(false);
     const isEditing = ref(false);
     const isSubmitting = ref(false);
@@ -171,53 +189,45 @@ export default {
         (value && value.length >= 3) || "Minimum 3 characters.",
     };
 
-    onMounted(() => {
-      const fetchCoins = async () => {
-        loading.value = true;
-        try {
-          await coinStore.fetchCoins(props.role);
-        } finally {
-          loading.value = false;
-        }
-      };
-      fetchCoins();
-
-      const intervalId = setInterval(fetchCoins, FETCHING_INTERVAL);
-
-      onUnmounted(() => {
-        clearInterval(intervalId);
-      });
+    onMounted(async () => {
+      loading.value = true;
+      try {
+        await productRequestStore.fetchProductRequests(props.role);
+        await productStore.fetchProducts();
+      } finally {
+        loading.value = false;
+      }
     });
 
     const openCreateDialog = () => {
-      coin.value = { amount: null };
+      productRequest.value = { amount: null };
       isEditing.value = false;
       formDialog.value = true;
     };
     const openUpdateDialog = (item) => {
-      coin.value = { ...item };
+      productRequest.value = { ...item };
       isEditing.value = true;
       formDialog.value = true;
     };
-    const addCoin = async () => {
+    const addProductRequest = async () => {
       isSubmitting.value = true;
       try {
-        await coinStore.addCoin(coin.value);
+        await productRequestStore.addProductRequest(productRequest.value);
         closeDialog();
       } catch (error) {
-        console.error("Add coin failed:", error);
+        console.error("Add productRequest failed:", error);
       } finally {
         isSubmitting.value = false;
       }
     };
 
-    const updateCoin = async () => {
+    const updateProductRequest = async () => {
       isSubmitting.value = true;
       try {
-        await coinStore.updateCoin(coin.value);
+        await productRequestStore.updateProductRequest(productRequest.value);
         closeDialog();
       } catch (error) {
-        console.error("Update coin failed:", error);
+        console.error("Update productRequest failed:", error);
       } finally {
         isSubmitting.value = false;
       }
@@ -266,9 +276,9 @@ export default {
       isSubmitting.value = true;
       try {
         if (selectedState.value == "delete")
-          await coinStore.trashCoin(selectedItemId.value);
+          await productRequestStore.trashProductRequest(selectedItemId.value);
         else
-          await coinStore.updateCoin({
+          await productRequestStore.updateProductRequest({
             id: selectedItemId.value,
             state: selectedState.value,
           });
@@ -281,11 +291,12 @@ export default {
     };
 
     const headers =
-      props.role == "cashier"
+      props.role == "store"
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "User", key: "product" },
+            { title: "Quantity", key: "amount", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
             { title: "Actions", key: "actions", sortable: false },
@@ -294,20 +305,23 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Product", key: "product" },
+            { title: "Quantity", key: "amount", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
-            { title: "Status", key: "status", sortable: false },
+            { title: "Approved by", key: "approved_by.name", sortable: false },
           ]
         : [
             { title: "#", key: "index", sortable: false },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Product", key: "product" },
+            { title: "Quantity", key: "amount", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
             { title: "Actions", key: "actions", sortable: false },
           ];
 
     return {
-      coins,
+      productRequests,
+      products,
       dialog,
       loading,
       isEditing,
@@ -321,9 +335,9 @@ export default {
       getItemStatus,
       getItemColor,
       openUpdateStateDialog,
-      coin,
-      addCoin,
-      updateCoin,
+      productRequest,
+      addProductRequest,
+      updateProductRequest,
       openCreateDialog,
       openUpdateDialog,
       formDialog,

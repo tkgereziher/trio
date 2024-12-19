@@ -1,17 +1,31 @@
 <template>
   <v-card min-height="80vh">
-    <v-card-title
-      >Coin Requests
-      <create-new
-        @click="openCreateDialog"
-        v-if="role && role == 'entertainment'"
-      />
+    <v-card-title>
+      <div v-if="role && role == 'entertainment'">
+        Playstation
+        <create-new @click="openCreateDialog" />
+      </div>
+      <v-row v-else>
+        <v-col>Playstation</v-col>
+        <v-col v-if="role && role == 'admin'">
+          <v-text-field
+            variant="outlined"
+            type="date"
+            v-model="filterDate"
+            hide-details
+            density="compact"
+            label="Select date"
+            @update:model-value="fetchItemsByDate()"
+            color="green"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="coins"
+        :items="playstations"
         class="elevation-1"
         item-key="id"
         :loading="loading"
@@ -103,16 +117,16 @@
       <v-form
         ref="form"
         v-model="valid"
-        @submit.prevent="isEditing ? updateCoin() : addCoin()"
+        @submit.prevent="isEditing ? updatePlaystation() : addPlaystation()"
       >
         <v-card>
           <v-card-title>
             <Close @click="closeDialog" />
             <span v-if="isEditing">Edit</span>
             <span v-else>Add</span>
-            Coin
+            Playstation
             <v-btn
-              @click="isEditing ? updateCoin() : addCoin()"
+              @click="isEditing ? updatePlaystation() : addPlaystation()"
               :color="isEditing ? '#14414b' : '#632097'"
               width="160"
               class="float-right text-none"
@@ -126,12 +140,21 @@
           <v-divider class="mb-3"></v-divider>
           <v-card-text>
             <v-text-field
-              v-model="coin.amount"
+              v-model="playstation.minutes"
               variant="outlined"
               density="compact"
               color="#632097"
               label="Amount"
               :rules="[rules.required]"
+              @update:model-value="updateTotalPrice()"
+            ></v-text-field>
+            <v-text-field
+              v-model="playstation.total_price"
+              variant="outlined"
+              density="compact"
+              color="#632097"
+              label="Total Price"
+              readonly
             ></v-text-field>
           </v-card-text>
         </v-card>
@@ -142,10 +165,9 @@
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import useCoinStore from "@/stores/coin";
-import moment from "moment";
+import usePlaystationStore from "@/stores/playstation";
 import { FETCHING_INTERVAL } from "@/constants/";
-
+import moment from "moment";
 export default {
   props: {
     role: {
@@ -154,14 +176,15 @@ export default {
     },
   },
   setup(props) {
-    const coinStore = useCoinStore();
-    const coins = computed(() => coinStore.coins);
+    const playstationStore = usePlaystationStore();
+    const playstations = computed(() => playstationStore.playstations);
     const dialog = ref(false);
     const valid = ref(false);
     const formDialog = ref(false);
+    const filterDate = ref(null);
     const selectedState = ref(null);
     const selectedItemId = ref(null);
-    const coin = ref({ amount: null });
+    const playstation = ref({ minutes: null, total_price: null });
     const loading = ref(false);
     const isEditing = ref(false);
     const isSubmitting = ref(false);
@@ -172,52 +195,57 @@ export default {
     };
 
     onMounted(() => {
-      const fetchCoins = async () => {
-        loading.value = true;
-        try {
-          await coinStore.fetchCoins(props.role);
-        } finally {
-          loading.value = false;
-        }
-      };
-      fetchCoins();
+      fetchPlaystations();
 
-      const intervalId = setInterval(fetchCoins, FETCHING_INTERVAL);
+      // const intervalId = setInterval(fetchPlaystations, FETCHING_INTERVAL);
 
-      onUnmounted(() => {
-        clearInterval(intervalId);
-      });
+      // onUnmounted(() => {
+      //   clearInterval(intervalId);
+      // });
     });
 
+    const fetchPlaystations = async () => {
+      loading.value = true;
+      try {
+        await playstationStore.fetchPlaystations(props.role, filterDate.value);
+      } finally {
+        loading.value = false;
+      }
+    };
+
     const openCreateDialog = () => {
-      coin.value = { amount: null };
+      playstation.value = { minutes: null, total_price: null };
       isEditing.value = false;
       formDialog.value = true;
     };
+    const fetchItemsByDate = () => {
+      fetchPlaystations();
+      // clearInterval();
+    };
     const openUpdateDialog = (item) => {
-      coin.value = { ...item };
+      playstation.value = { ...item };
       isEditing.value = true;
       formDialog.value = true;
     };
-    const addCoin = async () => {
+    const addPlaystation = async () => {
       isSubmitting.value = true;
       try {
-        await coinStore.addCoin(coin.value);
+        await playstationStore.addPlaystation(playstation.value);
         closeDialog();
       } catch (error) {
-        console.error("Add coin failed:", error);
+        console.error("Add playstation failed:", error);
       } finally {
         isSubmitting.value = false;
       }
     };
 
-    const updateCoin = async () => {
+    const updatePlaystation = async () => {
       isSubmitting.value = true;
       try {
-        await coinStore.updateCoin(coin.value);
+        await playstationStore.updatePlaystation(playstation.value);
         closeDialog();
       } catch (error) {
-        console.error("Update coin failed:", error);
+        console.error("Update playstation failed:", error);
       } finally {
         isSubmitting.value = false;
       }
@@ -226,6 +254,9 @@ export default {
       dialog.value = true;
       selectedItemId.value = itemId;
       selectedState.value = state;
+    };
+    const updateTotalPrice = () => {
+      playstation.value.total_price = playstation.value.minutes;
     };
 
     const closeDialog = () => {
@@ -266,9 +297,9 @@ export default {
       isSubmitting.value = true;
       try {
         if (selectedState.value == "delete")
-          await coinStore.trashCoin(selectedItemId.value);
+          await playstationStore.trashPlaystation(selectedItemId.value);
         else
-          await coinStore.updateCoin({
+          await playstationStore.updatePlaystation({
             id: selectedItemId.value,
             state: selectedState.value,
           });
@@ -285,7 +316,8 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Minutes", key: "minutes", sortable: false },
+            { title: "Total Price", key: "total_price", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
             { title: "Actions", key: "actions", sortable: false },
@@ -294,20 +326,23 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Minutes", key: "minutes", sortable: false },
+            { title: "Total Price", key: "total_price", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
           ]
         : [
             { title: "#", key: "index", sortable: false },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Minutes", key: "minutes", sortable: false },
+            { title: "Total Price", key: "total_price", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
             { title: "Actions", key: "actions", sortable: false },
           ];
 
     return {
-      coins,
+      filterDate,
+      playstations,
       dialog,
       loading,
       isEditing,
@@ -321,10 +356,12 @@ export default {
       getItemStatus,
       getItemColor,
       openUpdateStateDialog,
-      coin,
-      addCoin,
-      updateCoin,
+      updateTotalPrice,
+      playstation,
+      addPlaystation,
+      updatePlaystation,
       openCreateDialog,
+      fetchItemsByDate,
       openUpdateDialog,
       formDialog,
     };

@@ -289,11 +289,14 @@ export default {
           ]
         : [
             { title: "Waiter", value: "waiter" },
+            { title: "Club Waiter", value: "club_waiter" },
             { title: "Cashier", value: "cashier" },
+            { title: "Club Cashier", value: "club_cashier" },
             { title: "Kitchen", value: "kitchen" },
             { title: "Bartender", value: "bartender" },
+            { title: "Club Bartender", value: "club_bartender" },
             { title: "Barber", value: "barber" },
-            { title: "Barber Cashier", value: "barber_cashier" },
+            { title: "Club Barber", value: "club_barber" },
             { title: "Entertainment", value: "entertainment" },
             { title: "Store", value: "store" },
           ];

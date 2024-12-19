@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.COIN_BURL;
+const API_URL = Api.PRODUCT_IMPORT_BURL;
 import useSnackStore from "@/stores/snack";
 const snack = useSnackStore();
-const useCoinStore = defineStore("coin", {
+const useProductImportStore = defineStore("productImport", {
   state: () => ({
-    coins: [],
-    coin: null,
+    productImports: [],
+    productImport: null,
   }),
 
   actions: {
-    async fetchCoins(initiator = null, date = null) {
+    async fetchProductImports() {
       await axios
-        .get(API_URL + `?initiator=${initiator}&date=${date}`)
+        .get(API_URL)
         .then((response) => {
-          this.coins = response.data;
+          this.productImports = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -23,11 +23,11 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async fetchCoin(id) {
+    async fetchProductImport(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.coin = response.data;
+          this.productImport = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -35,29 +35,27 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async addCoin(data) {
-      await axios
-        .post(API_URL, data)
-        .then((response) => {
-          this.coins.unshift(response.data);
-          snack.showMessage(response);
-          return Promise.resolve();
-        })
-        .catch((error) => {
-          snack.showMessage(error.response);
-          return Promise.reject(error);
-        });
+    async addProductImport(data) {
+      try {
+        const response = await axios.post(API_URL, data);
+        this.productImports.unshift(response.data);
+        snack.showMessage(response);
+        return response;
+      } catch (error) {
+        snack.showMessage(error.response);
+        return Promise.reject(error);
+      }
     },
 
-    async updateCoin(data) {
+    async updateProductImport(data) {
       await axios
         .put(API_URL + `/${data.id}`, data)
         .then((response) => {
-          const object = this.coins.find(
+          const object = this.productImports.find(
             (item) => item.id === response.data.id
           );
           if (object) Object.assign(object, response.data);
-          else this.coin = response.data;
+          else this.productImport = response.data;
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -67,11 +65,13 @@ const useCoinStore = defineStore("coin", {
         });
     },
 
-    async trashCoin(id) {
+    async trashProductImport(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.coins = this.coins.filter((item) => item.id !== id);
+          this.productImports = this.productImports.filter(
+            (item) => item.id !== id
+          );
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -83,4 +83,4 @@ const useCoinStore = defineStore("coin", {
   },
 });
 
-export default useCoinStore;
+export default useProductImportStore;

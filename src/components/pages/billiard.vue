@@ -1,17 +1,31 @@
 <template>
   <v-card min-height="80vh">
-    <v-card-title
-      >Coin Requests
-      <create-new
-        @click="openCreateDialog"
-        v-if="role && role == 'entertainment'"
-      />
+    <v-card-title>
+      <div v-if="role && role == 'entertainment'">
+        Billiard
+        <create-new @click="openCreateDialog" />
+      </div>
+      <v-row v-else>
+        <v-col>Playstation</v-col>
+        <v-col v-if="role && role == 'admin'">
+          <v-text-field
+            variant="outlined"
+            type="date"
+            v-model="filterDate"
+            hide-details
+            density="compact"
+            label="Select date"
+            @update:model-value="fetchItemsByDate()"
+            color="green"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-data-table
         :headers="headers"
-        :items="coins"
+        :items="billiards"
         class="elevation-1"
         item-key="id"
         :loading="loading"
@@ -103,16 +117,16 @@
       <v-form
         ref="form"
         v-model="valid"
-        @submit.prevent="isEditing ? updateCoin() : addCoin()"
+        @submit.prevent="isEditing ? updateBilliard() : addBilliard()"
       >
         <v-card>
           <v-card-title>
             <Close @click="closeDialog" />
             <span v-if="isEditing">Edit</span>
             <span v-else>Add</span>
-            Coin
+            Billiard
             <v-btn
-              @click="isEditing ? updateCoin() : addCoin()"
+              @click="isEditing ? updateBilliard() : addBilliard()"
               :color="isEditing ? '#14414b' : '#632097'"
               width="160"
               class="float-right text-none"
@@ -126,12 +140,21 @@
           <v-divider class="mb-3"></v-divider>
           <v-card-text>
             <v-text-field
-              v-model="coin.amount"
+              v-model="billiard.minutes"
               variant="outlined"
               density="compact"
               color="#632097"
               label="Amount"
               :rules="[rules.required]"
+              @update:model-value="updateTotalPrice()"
+            ></v-text-field>
+            <v-text-field
+              v-model="billiard.total_price"
+              variant="outlined"
+              density="compact"
+              color="#632097"
+              label="Total Price"
+              readonly
             ></v-text-field>
           </v-card-text>
         </v-card>
@@ -142,7 +165,7 @@
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import useCoinStore from "@/stores/coin";
+import useBilliardStore from "@/stores/billiard";
 import moment from "moment";
 import { FETCHING_INTERVAL } from "@/constants/";
 
@@ -154,14 +177,15 @@ export default {
     },
   },
   setup(props) {
-    const coinStore = useCoinStore();
-    const coins = computed(() => coinStore.coins);
+    const billiardStore = useBilliardStore();
+    const billiards = computed(() => billiardStore.billiards);
     const dialog = ref(false);
     const valid = ref(false);
+    const filterDate = ref(null);
     const formDialog = ref(false);
     const selectedState = ref(null);
     const selectedItemId = ref(null);
-    const coin = ref({ amount: null });
+    const billiard = ref({ minutes: null, total_price: null });
     const loading = ref(false);
     const isEditing = ref(false);
     const isSubmitting = ref(false);
@@ -172,52 +196,56 @@ export default {
     };
 
     onMounted(() => {
-      const fetchCoins = async () => {
-        loading.value = true;
-        try {
-          await coinStore.fetchCoins(props.role);
-        } finally {
-          loading.value = false;
-        }
-      };
-      fetchCoins();
+      fetchBilliards();
 
-      const intervalId = setInterval(fetchCoins, FETCHING_INTERVAL);
+      // const intervalId = setInterval(fetchBilliards, FETCHING_INTERVAL);
 
-      onUnmounted(() => {
-        clearInterval(intervalId);
-      });
+      // onUnmounted(() => {
+      //   clearInterval(intervalId);
+      // });
     });
 
+    const fetchBilliards = async () => {
+      loading.value = true;
+      try {
+        await billiardStore.fetchBilliards(props.role, filterDate.value);
+      } finally {
+        loading.value = false;
+      }
+    };
+    const fetchItemsByDate = () => {
+      fetchBilliards();
+    };
+
     const openCreateDialog = () => {
-      coin.value = { amount: null };
+      billiard.value = { minutes: null, total_price: null };
       isEditing.value = false;
       formDialog.value = true;
     };
     const openUpdateDialog = (item) => {
-      coin.value = { ...item };
+      billiard.value = { ...item };
       isEditing.value = true;
       formDialog.value = true;
     };
-    const addCoin = async () => {
+    const addBilliard = async () => {
       isSubmitting.value = true;
       try {
-        await coinStore.addCoin(coin.value);
+        await billiardStore.addBilliard(billiard.value);
         closeDialog();
       } catch (error) {
-        console.error("Add coin failed:", error);
+        console.error("Add billiard failed:", error);
       } finally {
         isSubmitting.value = false;
       }
     };
 
-    const updateCoin = async () => {
+    const updateBilliard = async () => {
       isSubmitting.value = true;
       try {
-        await coinStore.updateCoin(coin.value);
+        await billiardStore.updateBilliard(billiard.value);
         closeDialog();
       } catch (error) {
-        console.error("Update coin failed:", error);
+        console.error("Update billiard failed:", error);
       } finally {
         isSubmitting.value = false;
       }
@@ -226,6 +254,9 @@ export default {
       dialog.value = true;
       selectedItemId.value = itemId;
       selectedState.value = state;
+    };
+    const updateTotalPrice = () => {
+      billiard.value.total_price = billiard.value.minutes;
     };
 
     const closeDialog = () => {
@@ -266,9 +297,9 @@ export default {
       isSubmitting.value = true;
       try {
         if (selectedState.value == "delete")
-          await coinStore.trashCoin(selectedItemId.value);
+          await billiardStore.trashBilliard(selectedItemId.value);
         else
-          await coinStore.updateCoin({
+          await billiardStore.updateBilliard({
             id: selectedItemId.value,
             state: selectedState.value,
           });
@@ -285,7 +316,8 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Minutes", key: "minutes", sortable: false },
+            { title: "Total Price", key: "total_price", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
             { title: "Actions", key: "actions", sortable: false },
@@ -294,20 +326,24 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Minutes", key: "minutes", sortable: false },
+            { title: "Total Price", key: "total_price", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
           ]
         : [
             { title: "#", key: "index", sortable: false },
-            { title: "# of coins", key: "amount", sortable: false },
+            { title: "Minutes", key: "minutes", sortable: false },
+            { title: "Total Price", key: "total_price", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
             { title: "Actions", key: "actions", sortable: false },
           ];
 
     return {
-      coins,
+      billiards,
+      filterDate,
+      fetchItemsByDate,
       dialog,
       loading,
       isEditing,
@@ -321,9 +357,10 @@ export default {
       getItemStatus,
       getItemColor,
       openUpdateStateDialog,
-      coin,
-      addCoin,
-      updateCoin,
+      updateTotalPrice,
+      billiard,
+      addBilliard,
+      updateBilliard,
       openCreateDialog,
       openUpdateDialog,
       formDialog,

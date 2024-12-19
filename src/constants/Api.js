@@ -1,6 +1,6 @@
-const BURL = "http://localhost:8000/api/";
+// const BURL = "http://localhost:8000/api/";
 // const BURL = "http://192.168.100.7:9090/api/";
-// const BURL = "https://core.triosportbar.com/api/";
+const BURL = "https://core.triosportbar.com/api/";
 
 const CATEGORY_BURL = BURL + "categories";
 const BARBER_BURL = BURL + "barbers";
@@ -13,7 +13,12 @@ const WAITER_BURL = BURL + "waiters";
 const ORDER_BURL = BURL + "orders";
 const ORDER_ITEM_BURL = BURL + "order-items";
 const COIN_BURL = BURL + "coins";
+const BILLIARD_BURL = BURL + "billiards";
+const PLAYSTATION_BURL = BURL + "playstations";
 const DASHBOARD_BURL = BURL + "dashboards";
+const PRODUCT_IMPORT_BURL = BURL + "product-imports";
+const PRODUCT_REQUEST_BURL = BURL + "product-requests";
+const PRODUCT_BALANCE_BURL = BURL + "product-balances";
 
 export default {
   CATEGORY_BURL,
@@ -26,5 +31,10 @@ export default {
   ORDER_BURL,
   ORDER_ITEM_BURL,
   COIN_BURL,
+  BILLIARD_BURL,
+  PLAYSTATION_BURL,
   DASHBOARD_BURL,
+  PRODUCT_IMPORT_BURL,
+  PRODUCT_REQUEST_BURL,
+  PRODUCT_BALANCE_BURL,
 };

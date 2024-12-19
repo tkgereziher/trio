@@ -21,56 +21,6 @@ export default [
     },
   },
 
-  //Admin
-  {
-    path: "/users",
-    name: "users",
-    component: () => import("@/views/admin/user.vue"),
-    meta: { title: "User", scope: "Authorized", allowedRoles: ["admin"] },
-  },
-
-  {
-    path: "/waiters",
-    name: "waiters",
-    component: () => import("@/views/admin/waiter.vue"),
-    meta: { title: "Waiters", scope: "Authorized", allowedRoles: ["admin"] },
-  },
-  // {
-  //   path: "/barbers",
-  //   name: "barbers",
-  //   component: () => import("@/views/admin/barber.vue"),
-  //   meta: {
-  //     title: "Barbers",
-  //     scope: "Authorized",
-  //     allowedRoles: ["admin"],
-  //   },
-  // },
-  {
-    path: "/categories",
-    name: "categories",
-    component: () => import("@/views/admin/category.vue"),
-    meta: { title: "Categories", scope: "Authorized", allowedRoles: ["admin"] },
-  },
-  {
-    path: "/barbery-categories",
-    name: "barberyCategories",
-    component: () => import("@/views/admin/barberryCategory.vue"),
-    meta: {
-      title: "Barbery Categories",
-      scope: "Authorized",
-      allowedRoles: ["admin"],
-    },
-  },
-  {
-    path: "/barbery-services",
-    name: "barberyServices",
-    component: () => import("@/views/barberryServices.vue"),
-    meta: {
-      title: "Barbery Services",
-      scope: "Authorized",
-      allowedRoles: ["admin"],
-    },
-  },
   {
     path: "/barbery-requests",
     name: "barberryRequests",
@@ -91,16 +41,6 @@ export default [
       allowedRoles: ["barber"],
     },
   },
-  {
-    path: "/products",
-    name: "products",
-    component: () => import("@/views/admin/product.vue"),
-    meta: {
-      title: "Products",
-      scope: "Authorized",
-      allowedRoles: ["admin", "store"],
-    },
-  },
 
   //Cashier
   {
@@ -112,9 +52,29 @@ export default [
   {
     path: "/coin-requests",
     name: "coinRequests",
-    component: () => import("@/views/coinRequests.vue"),
+    component: () => import("@/views/cashier/coinRequests.vue"),
     meta: {
       title: "Coin Requests",
+      scope: "Authorized",
+      allowedRoles: ["cashier"],
+    },
+  },
+  {
+    path: "/billiard-requests",
+    name: "billiardRequests",
+    component: () => import("@/views/cashier/billiardRequests.vue"),
+    meta: {
+      title: "Billiard Requests",
+      scope: "Authorized",
+      allowedRoles: ["cashier"],
+    },
+  },
+  {
+    path: "/playstation-requests",
+    name: "playstationRequests",
+    component: () => import("@/views/cashier/playstationRequests.vue"),
+    meta: {
+      title: "Playstation Requests",
       scope: "Authorized",
       allowedRoles: ["cashier"],
     },
@@ -158,17 +118,5 @@ export default [
     name: "borderItems",
     component: () => import("@/views/activeBarOrders.vue"),
     meta: { title: "Orders", scope: "Authorized", allowedRoles: ["bartender"] },
-  },
-
-  //Entertainment
-  {
-    path: "/coins",
-    name: "coins",
-    component: () => import("@/views/coins.vue"),
-    meta: {
-      title: "Coins",
-      scope: "Authorized",
-      allowedRoles: ["entertainment"],
-    },
   },
 ];
