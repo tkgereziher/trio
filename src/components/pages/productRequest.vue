@@ -19,8 +19,8 @@
         <template #item.user="{ item }">
           <span class="text-capitalize">{{ item.user?.name }}</span>
         </template>
-        <template #item.product="{ item }">
-          <span class="text-capitalize">{{ item.product?.name }}</span>
+        <template #item.material="{ item }">
+          <span class="text-capitalize">{{ item.material?.name }}</span>
         </template>
         <template #item.index="{ index }">
           {{ index + 1 }}
@@ -131,13 +131,13 @@
           <v-divider class="mb-3"></v-divider>
           <v-card-text>
             <v-autocomplete
-              v-model="productRequest.product_id"
+              v-model="productRequest.material_id"
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Product"
+              label="Material"
               :rules="[rules.required]"
-              :items="products"
+              :items="materials"
               item-title="name"
               item-value="id"
             ></v-autocomplete>
@@ -159,7 +159,7 @@
 <script>
 import { ref, computed, onMounted } from "vue";
 import useProductRequestStore from "@/stores/productRequest";
-import useProductStore from "@/stores/admin/product";
+import useMaterialStore from "@/stores/admin/material";
 import moment from "moment";
 
 export default {
@@ -171,9 +171,9 @@ export default {
   },
   setup(props) {
     const productRequestStore = useProductRequestStore();
-    const productStore = useProductStore();
+    const materialStore = useMaterialStore();
     const productRequests = computed(() => productRequestStore.productRequests);
-    const products = computed(() => productStore.products);
+    const materials = computed(() => materialStore.materials);
     const dialog = ref(false);
     const valid = ref(false);
     const formDialog = ref(false);
@@ -193,7 +193,7 @@ export default {
       loading.value = true;
       try {
         await productRequestStore.fetchProductRequests(props.role);
-        await productStore.fetchProducts();
+        await materialStore.fetchMaterials();
       } finally {
         loading.value = false;
       }
@@ -295,7 +295,7 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "User", key: "product" },
+            { title: "Material", key: "material" },
             { title: "Quantity", key: "amount", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
@@ -305,14 +305,14 @@ export default {
         ? [
             { title: "#", key: "index", sortable: false },
             { title: "User", key: "user" },
-            { title: "Product", key: "product" },
+            { title: "Material", key: "material" },
             { title: "Quantity", key: "amount", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Approved by", key: "approved_by.name", sortable: false },
           ]
         : [
             { title: "#", key: "index", sortable: false },
-            { title: "Product", key: "product" },
+            { title: "Material", key: "material" },
             { title: "Quantity", key: "amount", sortable: false },
             { title: "Requested at", key: "created_at", sortable: false },
             { title: "Status", key: "status", sortable: false },
@@ -321,7 +321,7 @@ export default {
 
     return {
       productRequests,
-      products,
+      materials,
       dialog,
       loading,
       isEditing,

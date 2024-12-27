@@ -3,6 +3,7 @@ import axios from "axios";
 import Api from "@/constants/Api";
 const API_URL = Api.ORDER_ITEM_BURL;
 import useSnackStore from "@/stores/snack";
+import useLoginStore from "./login";
 const snack = useSnackStore();
 const useOrderItemStore = defineStore("orderItem", {
   state: () => ({
@@ -19,6 +20,10 @@ const useOrderItemStore = defineStore("orderItem", {
           return Promise.resolve();
         })
         .catch((error) => {
+          if (error.status == 401) {
+            const loginStore = useLoginStore();
+            loginStore.logout();
+          }
           return Promise.reject(error);
         });
     },
@@ -31,6 +36,10 @@ const useOrderItemStore = defineStore("orderItem", {
           return Promise.resolve();
         })
         .catch((error) => {
+          if (error.status == 401) {
+            const loginStore = useLoginStore();
+            loginStore.logout();
+          }
           return Promise.reject(error);
         });
     },

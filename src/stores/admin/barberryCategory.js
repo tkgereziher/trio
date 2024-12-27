@@ -3,6 +3,7 @@ import axios from "axios";
 import Api from "@/constants/Api";
 const API_URL = Api.BARBERRY_CATEGORY_BURL;
 import useSnackStore from "@/stores/snack";
+import useLoginStore from "../login";
 const snack = useSnackStore();
 const useBarberryCategoryStore = defineStore("barberryCategory", {
   state: () => ({
@@ -19,6 +20,10 @@ const useBarberryCategoryStore = defineStore("barberryCategory", {
           return Promise.resolve();
         })
         .catch((error) => {
+          if (error.status == 401) {
+            const loginStore = useLoginStore();
+            loginStore.logout();
+          }
           return Promise.reject(error);
         });
     },
@@ -31,6 +36,10 @@ const useBarberryCategoryStore = defineStore("barberryCategory", {
           return Promise.resolve();
         })
         .catch((error) => {
+          if (error.status == 401) {
+            const loginStore = useLoginStore();
+            loginStore.logout();
+          }
           return Promise.reject(error);
         });
     },

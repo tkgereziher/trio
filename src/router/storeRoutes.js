@@ -53,4 +53,14 @@ export default [
       allowedRoles: ["store"],
     },
   },
+  {
+    path: "/materials",
+    name: "materials",
+    component: () => import("@/views/admin/material.vue"),
+    meta: {
+      title: "Materials",
+      scope: "Authorized",
+      allowedRoles: ["store"],
+    },
+  },
 ];

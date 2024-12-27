@@ -22,7 +22,15 @@
               >
                 <!-- <td>{{ i + 1 }}.</td> -->
                 <td>
-                  {{ product.product.name }}
+                  <span
+                    :class="
+                      product.state == 'rejected' ? 'text-linethrough' : ''
+                    "
+                    class="mr-1"
+                  >
+                    {{ product.product.name }}
+                  </span>
+
                   <v-chip :color="getItemColor(product.state)" size="x-small">{{
                     getItemStatus(product.state)
                   }}</v-chip>
@@ -218,7 +226,7 @@ export default {
       { title: "#", key: "index" },
       { title: "Waiter", key: "waiter.name" },
       { title: "Items", key: "items" },
-      { title: "Payment", key: "price" },
+      { title: "Payment", key: "total_price" },
       { title: "Ordered at", key: "created_at" },
       { title: "Actions", key: "actions", sortable: false },
     ];

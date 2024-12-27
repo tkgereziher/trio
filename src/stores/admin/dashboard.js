@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
+import useLoginStore from "../login";
 const API_URL = Api.DASHBOARD_BURL;
 const useDashboardStore = defineStore("dashboard", {
   state: () => ({
@@ -16,6 +17,10 @@ const useDashboardStore = defineStore("dashboard", {
           return Promise.resolve();
         })
         .catch((error) => {
+          if (error.status == 401) {
+            const loginStore = useLoginStore();
+            loginStore.logout();
+          }
           return Promise.reject(error);
         });
     },

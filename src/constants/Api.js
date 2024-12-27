@@ -1,7 +1,8 @@
 // const BURL = "http://localhost:8000/api/";
-// const BURL = "http://192.168.100.7:9090/api/";
-const BURL = "https://core.triosportbar.com/api/";
+const BURL = "http://192.168.100.7:9090/api/";
+// const BURL = "https://core.triosportbar.com/api/";
 
+const MATERIAL_BURL = BURL + "materials";
 const CATEGORY_BURL = BURL + "categories";
 const BARBER_BURL = BURL + "barbers";
 const BARBERRY_CATEGORY_BURL = BURL + "barbery-categories";
@@ -21,6 +22,7 @@ const PRODUCT_REQUEST_BURL = BURL + "product-requests";
 const PRODUCT_BALANCE_BURL = BURL + "product-balances";
 
 export default {
+  MATERIAL_BURL,
   CATEGORY_BURL,
   BARBER_BURL,
   BARBERRY_CATEGORY_BURL,

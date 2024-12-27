@@ -219,7 +219,15 @@ const STORE_MENU = [
   {
     title: "Requests",
     path: "storeProductRequests",
-    icon: "mdi-food-variant",
+    icon: "mdi-glass-mug",
+  },
+  {
+    type: "divider",
+  },
+  {
+    title: "Materials",
+    path: "materials",
+    icon: "mdi-kettle",
   },
 ];
 

@@ -52,12 +52,12 @@
         <v-card-text>
           <v-form ref="form" v-model="valid">
             <v-autocomplete
-              v-model="productImport.product_id"
-              :items="products"
+              v-model="productImport.material_id"
+              :items="materials"
               variant="outlined"
               density="compact"
               color="#632097"
-              label="Select Product"
+              label="Select Material"
               :rules="[rules.required]"
               item-title="name"
               item-value="id"
@@ -103,21 +103,21 @@
 <script>
 import { ref, computed, onMounted } from "vue";
 import useProductImportStore from "@/stores/product/productImport";
-import useProductStore from "@/stores/admin/product";
+import useMaterialStore from "@/stores/admin/material";
 
 export default {
   setup() {
     const productImportStore = useProductImportStore();
-    const productStore = useProductStore();
+    const materialStore = useMaterialStore();
 
     const productImports = computed(() => productImportStore.productImports);
-    const products = computed(() => productStore.products);
+    const materials = computed(() => materialStore.materials);
 
     const dialog = ref(false);
     const loading = ref(false);
     const productImport = ref({
       amount: null,
-      product_id: null,
+      material_id: null,
       unit_price: null,
       total_price: 0,
     });
@@ -142,7 +142,7 @@ export default {
     const openCreateDialog = () => {
       productImport.value = {
         amount: null,
-        product_id: null,
+        material_id: null,
         unit_price: null,
         total_price: 0,
       };
@@ -205,7 +205,7 @@ export default {
 
     const headers = [
       { title: "#", key: "index" },
-      { title: "Product", key: "product.name" },
+      { title: "Product", key: "material.name" },
       { title: "Amount", key: "amount" },
       { title: "Unit Price", key: "unit_price" },
       { title: "Total Price", key: "total_price" },
@@ -229,7 +229,7 @@ export default {
       updateProductImport,
       deleteProductImport,
       headers,
-      products,
+      materials,
     };
   },
 };

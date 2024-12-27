@@ -1,22 +1,22 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import Api from "@/constants/Api";
-const API_URL = Api.PLAYSTATION_BURL;
+const API_URL = Api.MATERIAL_BURL;
 import useSnackStore from "@/stores/snack";
-import useLoginStore from "./login";
+import useLoginStore from "../login";
 const snack = useSnackStore();
-const usePlaystationStore = defineStore("playstation", {
+const useMaterialStore = defineStore("material", {
   state: () => ({
-    playstations: [],
-    playstation: null,
+    materials: [],
+    material: null,
   }),
 
   actions: {
-    async fetchPlaystations(initiator = null, date = null) {
+    async fetchMaterials() {
       await axios
-        .get(API_URL + `?initiator=${initiator}&date=${date}`)
+        .get(API_URL)
         .then((response) => {
-          this.playstations = response.data;
+          this.materials = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -28,11 +28,11 @@ const usePlaystationStore = defineStore("playstation", {
         });
     },
 
-    async fetchPlaystation(id) {
+    async fetchMaterial(id) {
       await axios
         .get(API_URL + `/${id}`)
         .then((response) => {
-          this.playstation = response.data;
+          this.material = response.data;
           return Promise.resolve();
         })
         .catch((error) => {
@@ -44,11 +44,11 @@ const usePlaystationStore = defineStore("playstation", {
         });
     },
 
-    async addPlaystation(data) {
+    async addMaterial(data) {
       await axios
         .post(API_URL, data)
         .then((response) => {
-          this.playstations.unshift(response.data);
+          this.materials.push(response.data);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -58,15 +58,15 @@ const usePlaystationStore = defineStore("playstation", {
         });
     },
 
-    async updatePlaystation(data) {
+    async updateMaterial(data) {
       await axios
         .put(API_URL + `/${data.id}`, data)
         .then((response) => {
-          const object = this.playstations.find(
+          const object = this.materials.find(
             (item) => item.id === response.data.id
           );
           if (object) Object.assign(object, response.data);
-          else this.playstation = response.data;
+          else this.material = response.data;
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -76,13 +76,11 @@ const usePlaystationStore = defineStore("playstation", {
         });
     },
 
-    async trashPlaystation(id) {
+    async trashMaterial(id) {
       await axios
         .delete(API_URL + `/${id}`)
         .then((response) => {
-          this.playstations = this.playstations.filter(
-            (item) => item.id !== id
-          );
+          this.materials = this.materials.filter((item) => item.id !== id);
           snack.showMessage(response);
           return Promise.resolve();
         })
@@ -94,4 +92,4 @@ const usePlaystationStore = defineStore("playstation", {
   },
 });
 
-export default usePlaystationStore;
+export default useMaterialStore;
